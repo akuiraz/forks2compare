@@ -368,6 +368,7 @@ def lists_trakt_add_all_lists_to_library():
 @plugin.route('/lists/trakt/show_list/<user>/<slug>')
 def lists_trakt_show_list(user, slug, raw = False):
     list_items = trakt.get_list(user, slug)
+    xbmc.log("{0}".format(list_items),xbmc.LOGNOTICE)
     if raw: return list_items
     return _lists_trakt_show_list(list_items)
 

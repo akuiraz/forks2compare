@@ -1,3 +1,15 @@
+v2.0.[COLOR ff0084ff]17[/COLOR]
+- Added showname to tvshow-strmfiles
+- Added generating of sources with type other then video
+- Fixed contextmenu entries
+- Fixed date-offset
+- Fixed language module for use with Leia (has new string formatting)
+- Fixed adding movies without imdb_idto kodi-library
+- Fixed library player manager
+- Made all library folders' location configurable
+- Split up Music and MusicVideos
+- Updated tmdbsimple-module
+
 v2.0.[COLOR ff0084ff]16[/COLOR]
 - Added player-manager (settings > custom > Edit movies/tvshows library player)
 - Updated settings by including new players

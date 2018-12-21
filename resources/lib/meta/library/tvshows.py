@@ -30,11 +30,14 @@ def update_library():
     clean_needed = False
     updated = 0
     for id in shows:
-        id = int(id)
-        # add to library
-        with tvdb.session.cache_disabled():
-            if add_tvshow_to_library(library_folder, tvdb[id]):
-                clean_needed = True
+        try:
+            id = int(id)
+            # add to library
+            with tvdb.session.cache_disabled():
+                if add_tvshow_to_library(library_folder, tvdb[id]):
+                    clean_needed = True
+        except:
+            continue
         updated += 1
     if clean_needed:
         set_property("clean_library", 1)
@@ -164,7 +167,7 @@ def batch_add_tvshows_to_library(library_folder, show):
 
 def library_tv_remove_strm(show, folder, id, season, episode):
     enc_season = ('Season %s' % season).translate(None, '\/:*?"<>|').strip('.')
-    enc_name = 'S%02dE%02d' % (season, episode)
+    enc_name = '%s - S%02dE%02d' % (to_utf8(show['seriesname']), season, episode)
     season_folder = os.path.join(folder, enc_season)
     stream_file = os.path.join(season_folder, enc_name + "%s" % plugin.get_setting(SETTING_LIBRARY_TAGS, unicode) + '.strm')
     if xbmcvfs.exists(stream_file):
@@ -184,7 +187,7 @@ def library_tv_strm(show, folder, id, season, episode):
     try: xbmcvfs.mkdir(folder)
     except: pass
     # Create episode strm
-    enc_name = 'S%02dE%02d' % (season, episode)
+    enc_name = '%s - S%02dE%02d' % (to_utf8(show['seriesname'].replace(": ", " - ")), season, episode)
     stream = os.path.join(folder, enc_name + "%s" % plugin.get_setting(SETTING_LIBRARY_TAGS, unicode) + ".strm")
     if not xbmcvfs.exists(stream):
         file = xbmcvfs.File(stream, 'w')
@@ -222,7 +225,8 @@ def setup_library(library_folder):
             try:
                 source_thumbnail = get_icon_path("tv")
                 source_name = "MetalliQ " + _("TV shows")
-                source_content = "('{0}','tvshows','metadata.tvdb.com','',0,0,'<settings><setting id=\"RatingS\" value=\"TheTVDB\" /><setting id=\"absolutenumber\" value=\"false\" /><setting id=\"dvdorder\" value=\"false\" /><setting id=\"fallback\" value=\"true\" /><setting id=\"fanart\" value=\"true\" /><setting id=\"language\" value=\"{1}\" /></settings>',0,0,NULL,NULL)".format(library_folder, LANG)
+                LANG2 = "en" if LANG != "en" else "es"
+                source_content = "('{0}','tvshows','metadata.tvdb.com','',0,0,'<settings><setting id=\"RatingS\" value=\"TheTVDB\" /><setting id=\"absolutenumber\" value=\"false\" /><setting id=\"alsoimdb\" value=\"true\" /><setting id=\"dvdorder\" value=\"false\" /><setting id=\"fallback\" value=\"true\" /><setting id=\"fallbacklanguage\" value=\"{1}\" /><setting id=\"fanart\" value=\"true\" /><setting id=\"language\" value=\"{2}\" /><setting id=\"usefallbacklanguage\" value=\"true\" /></settings>',0,0,NULL,NULL)".format(library_folder, LANG2, LANG)
                 add_source(source_name, library_folder, source_content, source_thumbnail)
             except: pass
     # return translated path
@@ -238,7 +242,8 @@ def auto_tvshows_setup(library_folder):
             xbmcvfs.mkdir(library_folder)
             source_thumbnail = get_icon_path("tv")
             source_name = "MetalliQ " + _("TV shows")
-            source_content = "('{0}','tvshows','metadata.tvdb.com','',0,0,'<settings><setting id=\"RatingS\" value=\"TheTVDB\" /><setting id=\"absolutenumber\" value=\"false\" /><setting id=\"dvdorder\" value=\"false\" /><setting id=\"fallback\" value=\"true\" /><setting id=\"fanart\" value=\"true\" /><setting id=\"language\" value=\"{1}\" /></settings>',0,0,NULL,NULL)".format(library_folder, LANG)
+            LANG2 = "en" if LANG != "en" else "es"
+            source_content = "('{0}','tvshows','metadata.tvdb.com','',0,0,'<settings><setting id=\"RatingS\" value=\"TheTVDB\" /><setting id=\"absolutenumber\" value=\"false\" /><setting id=\"alsoimdb\" value=\"true\" /><setting id=\"dvdorder\" value=\"false\" /><setting id=\"fallback\" value=\"true\" /><setting id=\"fallbacklanguage\" value=\"{1}\" /><setting id=\"fanart\" value=\"true\" /><setting id=\"language\" value=\"{2}\" /><setting id=\"usefallbacklanguage\" value=\"true\" /></settings>',0,0,NULL,NULL)".format(library_folder, LANG2, LANG)
             add_source(source_name, library_folder, source_content, source_thumbnail)
             return True
         except: False

@@ -1,7 +1,7 @@
 import re
 import copy
 from threading import Event, Thread, RLock, Lock, current_thread
-from xbmcswift2 import xbmc, xbmcgui
+from xbmcswift2 import xbmc, xbmcgui, xbmcaddon
 
 from meta import plugin
 from meta.gui import dialogs
@@ -197,13 +197,27 @@ class Lister:
         pattern = to_unicode(to_utf8(pattern))
         label = to_unicode(to_utf8(label))
         #pattern = re.sub(r'\[[^)].*?\]', '', pattern)
+        if "$INFO[" in pattern:
+            m = re.search('\\[(.*?)\]', pattern)
+            info = m.group(1)
+            pattern = pattern.replace("$INFO[{}]".format(info), xbmc.getInfoLabel(info))
+        if "$LOCALIZE[" in pattern:
+            m = re.search('\[(\d+)\]', pattern)
+            id = int(m.group(1))
+            pattern = pattern.replace("$LOCALIZE[{}]".format(id), xbmc.getLocalizedString(id).encode('utf-8'))
+        if "$ADDON[" in pattern:
+            m = re.search('\[.*\ (\d+)\]', pattern)
+            aid = m.group(0).strip("[]").split(" ")[0]
+            id = int(m.group(1))
+#            xbmc.log("QQQQQ aid = {0} id = {1}".format(aid, xbmcaddon.Addon(aid).getLocalizedString(id).encode('utf-8')), xbmc.LOGNOTICE)
+            pattern = pattern.replace("$ADDON[{0} {1}]".format(aid, id), xbmcaddon.Addon(aid).getLocalizedString(id).encode('utf-8'))
         if pattern.startswith("><"):
             label = re.sub(r'\[[^)].*?\]', '', label)
             pattern = pattern.strip('><')
         plugin.log.debug("matching pattern {0} to label {1}".format(to_utf8(pattern), to_utf8(label)))
-         
         # Test for a match
         r = re.compile(pattern, re.I|re.UNICODE)
+#        plugin.log.debug("QQQQQ r = {0}".format(r))
         match = r.match(label)
         if ", The" in label and match is None:
             label = u"The " + label.replace(", The", "")
@@ -239,7 +253,7 @@ class Lister:
             if not path:
                 break
 
-            # Send keyboard data iff not last guidance
+            # Send keyboard data if not last guidance
             # TODO backward compatibility
             if hint.startswith("keyboard:"):
                 hint = u"@" + hint
@@ -318,6 +332,19 @@ class Lister:
                 next_page_hint = None
                 maxdepth = 10
                 if "@page:" in hint:
+                    if "$INFO[" in hint:
+                        m = re.search('\\[(.*?)\]', hint)
+                        info = m.group(1)
+                        hint = hint.replace("$INFO[{}]".format(info), xbmc.getInfoLabel(info))
+                    if "$LOCALIZE[" in hint:
+                        m = re.search('\[(\d+)\]', hint)
+                        id = int(m.group(1))
+                        hint = hint.replace("$LOCALIZE[{}]".format(id), xbmc.getLocalizedString(id).encode('utf-8'))
+                    if "$ADDON[" in hint:
+                        m = re.search('\[.*\ (\d+)\]', hint)
+                        aid = m.group(0).strip("[]").split(" ")[0]
+                        id = int(m.group(1))
+                        hint = hint.replace("$ADDON[{0} {1}]".format(aid, id), xbmcaddon.Addon(aid).getLocalizedString(id).encode('utf-8'))
                     hint, next_page_hint = hint.split("@page:")
                     if "@depth:" in next_page_hint: next_page_hint, maxdepth = next_page_hint.split("@depth:")
                 maxdepth = int(maxdepth)

@@ -1,50 +1,57 @@
 #! /usr/bin/python
+from xbmcswift2 import xbmc
 
 _strings = {}
 
 if __name__ == "__main__":
-	import polib
-	po = polib.pofile("resources/language/English/strings.po")
-	try:
-		import re, subprocess
-		r = subprocess.check_output(["grep", "-hnr", "_([\'\"]", "."])
-		strings = re.compile("_\([\"'](.*?)[\"']\)", re.IGNORECASE).findall(r)
-		translated = [m.msgid.replace("'", "\\'") for m in po]
-		missing = set([s for s in strings if s not in translated])
-		if missing:
-			ids_range = range(30000, 31000)
-			ids_reserved = [int(m.msgctxt[1:]) for m in po]
-			ids_available = [x for x in ids_range if x not in ids_reserved]
-			print "WARNING: missing translation for '%s'" % missing
-			for text in missing:
-				id = ids_available.pop(0)
-				entry = polib.POEntry(msgid=text, msgstr=u'', msgctxt="#{0}".format(id))
-				po.append(entry)
-			po.save("resources/language/English/strings.po")
-	except: pass
-	content = []
-	with open(__file__, "r") as me:
-		content = me.readlines()
-		content = content[:content.index("#GENERATED\n")+1]
-	with open(__file__, "w") as f:
-		f.writelines(content)
-		for m in po:
-			line = "_strings['{0}'] = {1}\n".format(m.msgid.replace("'", "\\'"), m.msgctxt.replace("#", "").strip())
-			f.write(line)
+    import polib
+    po = polib.pofile("resources/language/English/strings.po")
+    try:
+        import re, subprocess
+        r = subprocess.check_output(["grep", "-hnr", "_([\'\"]", "."])
+        strings = re.compile("_\([\"'](.*?)[\"']\)", re.IGNORECASE).findall(r)
+        translated = [m.msgid.replace("'", "\\'") for m in po]
+        missing = set([s for s in strings if s not in translated])
+        if missing:
+            ids_range = range(30000, 31000)
+            ids_reserved = [int(m.msgctxt[1:]) for m in po]
+            ids_available = [x for x in ids_range if x not in ids_reserved]
+            print "WARNING: missing translation for '{}'".format(missing)
+            for text in missing:
+                id = ids_available.pop(0)
+                entry = polib.POEntry(msgid=text, msgstr=u'', msgctxt="#{0}".format(id))
+                po.append(entry)
+            po.save("resources/language/English/strings.po")
+    except:
+        pass
+    content = []
+    with open(__file__, "r") as me:
+        content = me.readlines()
+        content = content[:content.index("#GENERATED\n")+1]
+    with open(__file__, "w") as f:
+        f.writelines(content)
+        for m in po:
+            line = "_strings['{0}'] = {1}\n".format(m.msgid.replace("'", "\\'"), m.msgctxt.replace("#", "").strip())
+            f.write(line)
 else:
-	def get_string(t):
-		import xbmc, xbmcaddon
-		ADDON = xbmcaddon.Addon()
-		ADDON_ID = ADDON.getAddonInfo("id")
-		id = _strings.get(t)
-		if not id:
-			xbmc.log("LANGUAGE: missing translation for '%s'" % t)
-			return t
-		elif id in range(30000, 31000) and ADDON_ID.startswith("plugin"): return xbmcaddon.Addon().getLocalizedString(id).encode('utf-8')
-		elif id in range(31000, 32000) and ADDON_ID.startswith("skin"): return xbmcaddon.Addon().getLocalizedString(id).encode('utf-8')
-		elif id in range(32000, 33000) and ADDON_ID.startswith("script"): return xbmcaddon.Addon().getLocalizedString(id).encode('utf-8')
-		elif not id in range(30000, 33000): return xbmc.getLocalizedString(id).encode('utf-8')
-	#setattr(__builtin__, "_", get_string)
+    def get_string(t):
+        import xbmcaddon
+        ADDON = xbmcaddon.Addon()
+        ADDON_ID = ADDON.getAddonInfo("id")
+        id = _strings.get(t)
+        if not id:
+            xbmc.log("LANGUAGE: missing translation for '{}'".format(t))
+            return t
+        elif id in range(30000, 31000) and ADDON_ID.startswith("plugin"):
+            return xbmcaddon.Addon().getLocalizedString(id).encode('utf-8')
+        elif id in range(31000, 32000) and ADDON_ID.startswith("skin"):
+            return xbmcaddon.Addon().getLocalizedString(id).encode('utf-8')
+        elif id in range(32000, 33000) and ADDON_ID.startswith("script"):
+            return xbmcaddon.Addon().getLocalizedString(id).encode('utf-8')
+        elif not id in range(30000, 33000):
+            return xbmc.getLocalizedString(id).encode('utf-8')
+    #setattr(__builtin__, "_", get_string)
+LEIA = int(xbmc.getInfoLabel('System.BuildVersion')[:2]) > 17
 
 #SYSTEM
 _strings['Programs'] = 0
@@ -179,7 +186,10 @@ _strings['No disc'] = 164
 _strings['Disc present'] = 165
 _strings['Skin'] = 166
 _strings['Cancel file operations'] = 167
-_strings['%s- %s'] = 168
+if LEIA:
+    _strings['{0:s}- {1:s}'] = 168
+else:
+    _strings['%s- %s'] = 168
 _strings['Resolution'] = 169
 _strings['Sort title'] = 171
 _strings['Release date'] = 172
@@ -239,7 +249,10 @@ _strings['Magnification'] = 238
 _strings['Clear playlist on finish'] = 239
 _strings['Windowed'] = 242
 _strings['Full screen'] = 244
-_strings['Sizing: (%i,%i)->(%i,%i) (Zoom x%2.2f) AR:%2.2f:1 (Pixels: %2.2f:1) (VShift: %2.2f)'] = 245
+if LEIA:
+    _strings['Sizing: ({0:d},{1:d})->({2:d},{3:d}) (Zoom x{4:2.2f}) AR:{5:2.2f}:1 (Pixels: {6:2.2f}:1) (VShift: {7:2.2f})'] = 245
+else:
+    _strings['Sizing: (%i,%i)->(%i,%i) (Zoom x%2.2f) AR:%2.2f:1 (Pixels: %2.2f:1) (VShift: %2.2f)'] = 245
 _strings['Monitor'] = 246
 _strings['Scripts'] = 247
 _strings['Language'] = 248
@@ -275,7 +288,10 @@ _strings['Adjust the rectangle so it is perfectly square'] = 278
 _strings['Unable to load settings'] = 279
 _strings['Using default settings'] = 280
 _strings['Please check the XML files'] = 281
-_strings['Found %i items'] = 282
+if LEIA:
+    _strings['Found {0:d} items'] = 282
+else:
+    _strings['Found %i items'] = 282
 _strings['Search results'] = 283
 _strings['No results found'] = 284
 _strings['Preferred audio language'] = 285
@@ -414,7 +430,10 @@ _strings['Please insert the following disc:'] = 429
 _strings['Sort by: DVD#'] = 430
 _strings['No cache'] = 431
 _strings['Remove movie from library'] = 432
-_strings['From %s at %i %s'] = 434
+if LEIA:
+    _strings['From {0:s} at {1:d} {2:s}'] = 434
+else:
+    _strings['From %s at %i %s'] = 434
 _strings['No optical disc drive detected'] = 435
 _strings['You need an optical disc drive to play this video'] = 436
 _strings['Removable disk'] = 437
@@ -499,7 +518,10 @@ _strings['Select genre'] = 530
 _strings['New genre'] = 531
 _strings['Manual addition'] = 532
 _strings['Enter genre'] = 533
-_strings['View: %s'] = 534
+if LEIA:
+    _strings['View: {0:s}'] = 534
+else:
+    _strings['View: %s'] = 534
 _strings['List'] = 535
 _strings['Icons'] = 536
 _strings['Big list'] = 537
@@ -515,7 +537,10 @@ _strings['Passthrough output device'] = 546
 _strings['No biography for this artist'] = 547
 _strings['Downmix multichannel audio to stereo'] = 548
 _strings['Number'] = 549
-_strings['Sort by: %s'] = 550
+if LEIA:
+    _strings['Sort by: {0:s}'] = 550
+else:
+    _strings['Sort by: %s'] = 550
 _strings['Name'] = 551
 _strings['Date'] = 552
 _strings['Size'] = 553
@@ -661,7 +686,10 @@ _strings['Yellow green'] = 764
 _strings['Cyan'] = 765
 _strings['Light grey'] = 766
 _strings['Grey'] = 767
-_strings['Error %i: share not available'] = 770
+if LEIA:
+    _strings['Error {0:d}: share not available'] = 770
+else:
+    _strings['Error %i: share not available'] = 770
 _strings['Seeking'] = 773
 _strings['Slideshow folder'] = 774
 _strings['Network interface'] = 775
@@ -686,7 +714,10 @@ _strings['Initial repeat delay (ms)'] = 795
 _strings['Continuous repeat delay (ms)'] = 796
 _strings['Maximum number of clients'] = 797
 _strings['Internet access'] = 798
-_strings['%s of %s available'] = 802
+if LEIA:
+    _strings['{0:s} of {1:s} available'] = 802
+else:
+    _strings['%s of %s available'] = 802
 _strings['Invalid port number entered'] = 850
 _strings['Valid port range is 1-65535'] = 851
 _strings['Valid port range is 1024-65535'] = 852
@@ -720,8 +751,12 @@ _strings['Submenu'] = 1034
 _strings['Enable submenu buttons'] = 1035
 _strings['Favourites'] = 1036
 _strings['Loading directory'] = 1040
-_strings['Retrieved %i items'] = 1041
-_strings['Retrieved %i of %i items'] = 1042
+if LEIA:
+    _strings['Retrieved {0:d} items'] = 1041
+    _strings['Retrieved %i of %i items'] = 1042
+else:
+    _strings['Retrieved %i items'] = 1041
+    _strings['Retrieved {0:d} of {0:d} items'] = 1042
 _strings['Set plug-in thumb'] = 1044
 _strings['Access points'] = 1046
 _strings['Other...'] = 1047
@@ -770,7 +805,10 @@ _strings['Device name'] = 1271
 _strings['Use password protection'] = 1272
 _strings['AirPlay'] = 1273
 _strings['AirTunes'] = 1274
-_strings['Filter %s'] = 1275
+if LEIA:
+    _strings['Filter {0:s}'] = 1275
+else:
+    _strings['Filter %s'] = 1275
 _strings['Custom audio device'] = 1300
 _strings['Custom passthrough device'] = 1301
 _strings['Temperature'] = 1375
@@ -854,7 +892,6 @@ _strings['Programs'] = 10001
 _strings['Pictures'] = 10002
 _strings['File manager'] = 10003
 _strings['Settings'] = 10004
-_strings['Music'] = 10005
 _strings['Videos'] = 10006
 _strings['System information'] = 10007
 _strings['Settings - General'] = 10008
@@ -918,7 +955,10 @@ _strings['File stacking dialogue'] = 12008
 _strings['Rebuild index...'] = 12009
 _strings['Return to music window'] = 12010
 _strings['Return to videos window'] = 12011
-_strings['Resume from %s'] = 12022
+if LEIA:
+    _strings['Resume from {0:s}'] = 12022
+else:
+    _strings['Resume from %s'] = 12022
 _strings['0'] = 12310
 _strings['1'] = 12311
 _strings['2'] = 12312
@@ -990,9 +1030,14 @@ _strings['Waiting for network to connect...'] = 13028
 _strings['Waiting for server to wake up...'] = 13030
 _strings['Extended wait for server to wake up...'] = 13031
 _strings['Waiting for services to launch...'] = 13032
-_strings['Updated for %s'] = 13034
-_strings['Found for %s'] = 13035
-_strings['Failed for %s'] = 13036
+if LEIA:
+    _strings['Updated for {0:s}'] = 13034
+    _strings['Found for {0:s}'] = 13035
+    _strings['Failed for {0:s}'] = 13036
+else:
+    _strings['Updated for %s'] = 13034
+    _strings['Found for %s'] = 13035
+    _strings['Failed for %s'] = 13036
 _strings['Running low on battery'] = 13050
 _strings['Flicker filter'] = 13100
 _strings['Let driver choose (requires restart)'] = 13101
@@ -1021,21 +1066,35 @@ _strings['Primary DNS'] = 13161
 _strings['Initialise failed'] = 13162
 _strings['Never'] = 13170
 _strings['Immediately'] = 13171
-_strings['After %i secs'] = 13172
+if LEIA:
+    _strings['After {0:d} secs'] = 13172
+else:
+    _strings['After %i secs'] = 13172
 _strings['HDD install date:'] = 13173
 _strings['HDD power cycle count:'] = 13174
 _strings['Profiles'] = 13200
-_strings['Delete profile \'%s\'?'] = 13201
+if LEIA:
+    _strings['Delete profile \'{0:s}\'?'] = 13201
+else:
+    _strings['Delete profile \'%s\'?'] = 13201
 _strings['Last loaded profile:'] = 13204
 _strings['Unknown'] = 13205
 _strings['Overwrite'] = 13206
 _strings['Alarm clock'] = 13208
 _strings['Alarm clock interval (in minutes)'] = 13209
-_strings['Started, alarm in %im'] = 13210
+if LEIA:
+    _strings['Started, alarm in {0:d}m'] = 13210
+else:
+    _strings['Started, alarm in %im'] = 13210
 _strings['Alarm!'] = 13211
-_strings['Cancelled with %im%is left'] = 13212
-_strings['%2.0fm'] = 13213
-_strings['%2.0fs'] = 13214
+if LEIA:
+    _strings['Cancelled with {0:d}m{1:d}s left'] = 13212
+    _strings['{0:2.0f}m'] = 13213
+    _strings['{0:2.0f}s'] = 13214
+else:
+    _strings['Cancelled with %im%is left'] = 13212
+    _strings['%2.0fm'] = 13213
+    _strings['%2.0fs'] = 13214
 _strings['Search for subtitles in RARs'] = 13249
 _strings['Browse for subtitle...'] = 13250
 _strings['Move item'] = 13251
@@ -1083,9 +1142,14 @@ _strings['Right only'] = 13322
 _strings['Background transparency'] = 13324
 _strings['Foreground transparency'] = 13325
 _strings['A/V delay'] = 13326
-_strings['%s not found'] = 13328
-_strings['Error opening %s'] = 13329
-_strings['Unable to load %s'] = 13330
+if LEIA:
+    _strings['{0:s} not found'] = 13328
+    _strings['Error opening {0:s}'] = 13329
+    _strings['Unable to load {0:s}'] = 13330
+else:
+    _strings['%s not found'] = 13328
+    _strings['Error opening %s'] = 13329
+    _strings['Unable to load %s'] = 13330
 _strings['Error: Out of memory'] = 13331
 _strings['Move up'] = 13332
 _strings['Move down'] = 13333
@@ -1138,13 +1202,19 @@ _strings['Audio and subtitle settings'] = 13396
 _strings['Enable subtitles'] = 13397
 _strings['Shortcuts'] = 13398
 _strings['Crossfade between songs on the same album'] = 13400
-_strings['Browse for %s'] = 13401
+if LEIA:
+    _strings['Browse for {0:s}'] = 13401
+else:
+    _strings['Browse for %s'] = 13401
 _strings['Show track position'] = 13402
 _strings['Clear default'] = 13403
 _strings['Resume'] = 13404
 _strings['Get thumb'] = 13405
 _strings['Picture information'] = 13406
-_strings['%s presets'] = 13407
+if LEIA:
+    _strings['{0:s} presets'] = 13407
+else:
+    _strings['%s presets'] = 13407
 _strings['(IMDb user rating)'] = 13408
 _strings['Top 250'] = 13409
 _strings['Tune in on Last.fm'] = 13410
@@ -1181,8 +1251,12 @@ _strings['Local art'] = 13514
 _strings['No art'] = 13515
 _strings['Add art'] = 13516
 _strings['Off'] = 13551
-_strings['%d Minute'] = 13554
-_strings['%d Minutes'] = 13555
+if LEIA:
+    _strings['{0:d} Minute'] = 13554
+    _strings['{0:d} Minutes'] = 13555
+else:
+    _strings['%d Minute'] = 13554
+    _strings['%d Minutes'] = 13555
 _strings['Allow start of Kodi using the remote'] = 13602
 _strings['Sequence delay time'] = 13603
 _strings['Disabled'] = 13610
@@ -1220,17 +1294,29 @@ _strings['Services'] = 14036
 _strings['Network settings changed'] = 14038
 _strings['Internet connection bandwidth limitation'] = 14041
 _strings['- Shutdown while playing'] = 14043
-_strings['%i min'] = 14044
-_strings['%i sec'] = 14045
-_strings['%i ms'] = 14046
-_strings['%i %%'] = 14047
-_strings['%i kbps'] = 14048
-_strings['%i kb'] = 14049
-_strings['%i.0 dB'] = 14050
+if LEIA:
+    _strings['{0:d} min'] = 14044
+    _strings['{0:d} sec'] = 14045
+    _strings['{0:d} ms'] = 14046
+    _strings['{0:d} %'] = 14047
+    _strings['{0:d} kbps'] = 14048
+    _strings['{0:d} kb'] = 14049
+    _strings['{0:d}.0 dB'] = 14050
+else:
+    _strings['%i min'] = 14044
+    _strings['%i sec'] = 14045
+    _strings['%i ms'] = 14046
+    _strings['%i %%'] = 14047
+    _strings['%i kbps'] = 14048
+    _strings['%i kb'] = 14049
+    _strings['%i.0 dB'] = 14050
 _strings['Time format'] = 14051
 _strings['Date format'] = 14052
 _strings['GUI filters'] = 14053
-_strings['%2.1f dB'] = 14054
+if LEIA:
+    _strings['{0:2.1f} dB'] = 14054
+else:
+    _strings['%2.1f dB'] = 14054
 _strings['Use background scanning'] = 14055
 _strings['Stop scan'] = 14056
 _strings['Film grain effect'] = 14058
@@ -1270,7 +1356,10 @@ _strings['Blu-ray playback mode'] = 14102
 _strings['Play main movie'] = 14103
 _strings['Show simplified menu'] = 14104
 _strings['Unavailable source'] = 15012
-_strings['What would you like to do with media items from %s'] = 15013
+if LEIA:
+    _strings['What would you like to do with media items from {0:s}'] = 15013
+else:
+    _strings['What would you like to do with media items from %s'] = 15013
 _strings['Keep'] = 15014
 _strings['Remove'] = 15015
 _strings['Games'] = 15016
@@ -1357,9 +1446,14 @@ _strings['MMAL - Advanced'] = 16330
 _strings['MMAL - Bob'] = 16332
 _strings['Post-processing'] = 16400
 _strings['Display sleep timeout'] = 17500
-_strings['%i MByte'] = 17997
-_strings['%i hours'] = 17998
-_strings['%i days'] = 17999
+if LEIA:
+    _strings['{0:d} MByte'] = 17997
+    _strings['{0:d} hours'] = 17998
+    _strings['{0:d} days'] = 17999
+else:
+    _strings['%i MByte'] = 17997
+    _strings['%i hours'] = 17998
+    _strings['%i days'] = 17999
 _strings['Switch to channel'] = 19000
 _strings['or use phrases to find an exact match, like \"The wizard of Oz\".'] = 19002
 _strings['Find similar'] = 19003
@@ -1414,7 +1508,10 @@ _strings['Channel icons'] = 19066
 _strings['This event is already being recorded.'] = 19067
 _strings['Go to now'] = 19070
 _strings['Delay channel switch'] = 19073
-_strings['Unknown channel %u'] = 19085
+if LEIA:
+    _strings['Unknown channel {0:d}'] = 19085
+else:
+    _strings['Unknown channel %u'] = 19085
 _strings['Service'] = 19099
 _strings['Mux'] = 19100
 _strings['Provider'] = 19101
@@ -1487,8 +1584,12 @@ _strings['None of the connected PVR backends supports scanning for channels.'] =
 _strings['Continue?'] = 19194
 _strings['Client actions'] = 19195
 _strings['PVR client specific actions'] = 19196
-_strings['Recording started on: %s'] = 19197
-_strings['Recording finished on: %s'] = 19198
+if LEIA:
+    _strings['Recording started on: {0:s}'] = 19197
+    _strings['Recording finished on: {0:s}'] = 19198
+else:
+    _strings['Recording started on: %s'] = 19197
+    _strings['Recording finished on: %s'] = 19198
 _strings['Channel manager'] = 19199
 _strings['Channel name:'] = 19201
 _strings['Channel icon:'] = 19202
@@ -1604,7 +1705,10 @@ _strings['Lock settings'] = 20043
 _strings['Start fresh'] = 20044
 _strings['Enter master mode'] = 20045
 _strings['Leave master mode'] = 20046
-_strings['Create profile \'%s\'?'] = 20047
+if LEIA:
+    _strings['Create profile \'{0:s}\'?'] = 19198
+else:
+    _strings['Create profile \'%s\'?'] = 20047
 _strings['Best available'] = 20049
 _strings['Auto-switch between 16x9 and 4x3'] = 20050
 _strings['Treat stacked files as single file'] = 20051
@@ -1652,9 +1756,15 @@ _strings['Root'] = 20108
 _strings['Zoom'] = 20109
 _strings['UPnP settings'] = 20110
 _strings['Autostart UPnP client'] = 20111
-_strings['Last login: %s'] = 20112
+if LEIA:
+    _strings['Last login: {0:s}'] = 20112
+else:
+    _strings['Last login: %s'] = 20112
 _strings['Never logged on'] = 20113
-_strings['Profile %i / %i'] = 20114
+if LEIA:
+    _strings['Profile {0:d} / {1:d}'] = 20114
+else:
+    _strings['Profile %i / %i'] = 20114
 _strings['User login / Select a profile'] = 20115
 _strings['Use lock on login screen'] = 20116
 _strings['Invalid lock code.'] = 20117
@@ -1674,20 +1784,29 @@ _strings['Do you want to scan the folder?'] = 20135
 _strings['Memory unit'] = 20136
 _strings['Memory unit mounted'] = 20137
 _strings['Unable to mount memory unit'] = 20138
-_strings['In port %i, slot %i'] = 20139
+if LEIA:
+    _strings['In port {0:d}, slot {1:d}'] = 20139
+else:
+    _strings['In port %i, slot %i'] = 20139
 _strings['Lock screensaver'] = 20140
 _strings['Set'] = 20141
 _strings['Username'] = 20142
 _strings['Enter password for'] = 20143
 _strings['Shutdown timer'] = 20144
 _strings['Shutdown interval (in minutes)'] = 20145
-_strings['Started, shutdown in %im'] = 20146
+if LEIA:
+    _strings['Started, shutdown in %im'] = 20146
+else:
+    _strings['Started, shutdown in %im'] = 20146
 _strings['Shutdown in 30 minutes'] = 20147
 _strings['Shutdown in 60 minutes'] = 20148
 _strings['Shutdown in 120 minutes'] = 20149
 _strings['Custom shutdown timer'] = 20150
 _strings['Cancel shutdown timer'] = 20151
-_strings['Lock preferences for %s'] = 20152
+if LEIA:
+    _strings['Lock preferences for {0:s}'] = 20152
+else:
+    _strings['Lock preferences for %s'] = 20152
 _strings['Browse...'] = 20153
 _strings['Summary information'] = 20154
 _strings['Storage information'] = 20155
@@ -1745,14 +1864,25 @@ _strings['Make new folder'] = 20309
 _strings['Unknown or onboard (protected)'] = 20311
 _strings['Videos - Library'] = 20314
 _strings['Sort by: ID'] = 20316
-_strings['Scanning movies using %s'] = 20317
-_strings['Scanning music videos using %s'] = 20318
-_strings['Scanning artists using %s'] = 20320
-_strings['Scanning albums using %s'] = 20321
+if LEIA:
+    _strings['Scanning movies using {0:s}'] = 20317
+    _strings['Scanning music videos using {0:s}'] = 20318
+    _strings['Scanning TV shows using {0:s}'] = 20319
+    _strings['Scanning artists using {0:s}'] = 20320
+    _strings['Scanning albums using {0:s}'] = 20321
+else:
+    _strings['Scanning movies using %s'] = 20317
+    _strings['Scanning music videos using %s'] = 20318
+    _strings['Scanning TV shows using %s'] = 20319
+    _strings['Scanning artists using %s'] = 20320
+    _strings['Scanning albums using %s'] = 20321
 _strings['Movie plot'] = 20323
 _strings['Play part...'] = 20324
 _strings['Calibration reset'] = 20325
-_strings['This will reset the calibration values for %s'] = 20326
+if LEIA:
+    _strings['This will reset the calibration values for {0:s}'] = 20326
+else:
+    _strings['This will reset the calibration values for %s'] = 20326
 _strings['to its default values.'] = 20327
 _strings['Browse for destination'] = 20328
 _strings['Movies are in separate folders that match the movie title'] = 20329
@@ -1780,7 +1910,10 @@ _strings['Loading TV show details'] = 20353
 _strings['Fetching episode guide'] = 20354
 _strings['Select TV show:'] = 20356
 _strings['Enter the TV show name'] = 20357
-_strings['Season %i'] = 20358
+if LEIA:
+    _strings['Season {0:d}'] = 20358
+else:
+    _strings['Season %i'] = 20358
 _strings['Episode'] = 20359
 _strings['Episodes'] = 20360
 _strings['Loading episode details'] = 20361
@@ -1868,17 +2001,31 @@ _strings['Listener'] = 20454
 _strings['Listeners'] = 20455
 _strings['Movie set'] = 20457
 _strings['Tags'] = 20459
-_strings['Add %s'] = 20460
-_strings['Remove %s'] = 20461
+if LEIA:
+    _strings['Add {0:s}'] = 20460
+    _strings['Remove {0:s}'] = 20461
+else:
+    _strings['Add %s'] = 20460
+    _strings['Remove %s'] = 20461
 _strings['New tag...'] = 20462
-_strings['A tag with the name \'%s\' already exists.'] = 20463
-_strings['Select %s'] = 20464
+if LEIA:
+    _strings['A tag with the name \'{0:s}\' already exists.'] = 20463
+    _strings['Select {0:s}'] = 20464
+else:
+    _strings['A tag with the name \'%s\' already exists.'] = 20463
+    _strings['Select %s'] = 20464
 _strings['Manage movie set'] = 20465
 _strings['Select movie set'] = 20466
 _strings['Add movie to a new set'] = 20468
-_strings['Keep current set (%s)'] = 20469
+if LEIA:
+    _strings['Keep current set ({0:s})'] = 20469
+else:
+    _strings['Keep current set (%s)'] = 20469
 _strings['Show hidden files and directories'] = 21330
-_strings['Connecting to: %s'] = 21336
+if LEIA:
+    _strings['Connecting to: {0:s}'] = 21336
+else:
+    _strings['Connecting to: %s'] = 21336
 _strings['Add media share...'] = 21359
 _strings['Look for remote UPnP players'] = 21361
 _strings['Bookmark created'] = 21362
@@ -1942,9 +2089,15 @@ _strings['descending'] = 21431
 _strings['Edit smart playlist'] = 21432
 _strings['Find items where'] = 21434
 _strings['Edit'] = 21435
-_strings['%i items'] = 21436
+if LEIA:
+    _strings['{0:d} items'] = 21436
+else:
+    _strings['%i items'] = 21436
 _strings['New smart playlist...'] = 21437
-_strings['%c Drive'] = 21438
+if LEIA:
+    _strings['{0:c} Drive'] = 21438
+else:
+    _strings['%c Drive'] = 21438
 _strings['Edit party mode rules'] = 21439
 _strings['Home folder'] = 21440
 _strings['Watched count'] = 21441
@@ -1969,10 +2122,16 @@ _strings['Bottom of video'] = 21462
 _strings['Below video'] = 21463
 _strings['Top of video'] = 21464
 _strings['Above video'] = 21465
-_strings['%.1f to %.1f'] = 21467
-_strings['%d to %d'] = 21468
-_strings['%s to %s'] = 21469
-_strings['%s [%d]'] = 21470
+if LEIA:
+    _strings['{0:.1f} to {1:.1f}'] = 21467
+    _strings['{0:d} to {1:d}'] = 21468
+    _strings['{0:s} to {1:s}'] = 21469
+    _strings['{0:s} [{1:d}]'] = 21470
+else:
+    _strings['%.1f to %.1f'] = 21467
+    _strings['%d to %d'] = 21468
+    _strings['%s to %s'] = 21469
+    _strings['%s [%d]'] = 21470
 _strings['(External)'] = 21602
 _strings['File name'] = 21800
 _strings['File path'] = 21801
@@ -2048,9 +2207,14 @@ _strings['Label'] = 21899
 _strings['Update library on startup'] = 22000
 _strings['Hide progress of library updates'] = 22001
 _strings['DNS suffix'] = 22002
-_strings['%2.3fs'] = 22003
-_strings['Delayed by: %2.3fs'] = 22004
-_strings['Ahead by: %2.3fs'] = 22005
+if LEIA:
+    _strings['{0:2.3f}s'] = 22003
+    _strings['Delayed by: {0:2.3f}'] = 22004
+    _strings['Ahead by: {0:2.3f}'] = 22005
+else:
+    _strings['%2.3fs'] = 22003
+    _strings['Delayed by: %2.3fs'] = 22004
+    _strings['Ahead by: %2.3fs'] = 22005
 _strings['Subtitle offset'] = 22006
 _strings['OpenGL vendor:'] = 22007
 _strings['OpenGL renderer:'] = 22008
@@ -2076,8 +2240,12 @@ _strings['Choose'] = 22080
 _strings['More...'] = 22082
 _strings['Play all'] = 22083
 _strings['Teletext not available'] = 23049
-_strings['Part %i'] = 23051
-_strings['Buffering %i bytes'] = 23052
+if LEIA:
+    _strings['Part {0:d}'] = 23051
+    _strings['Buffering {0:d} bytes'] = 23052
+else:
+    _strings['Part %i'] = 23051
+    _strings['Buffering %i bytes'] = 23052
 _strings['Stopping'] = 23053
 _strings['Running'] = 23054
 _strings['Add-on'] = 24000
@@ -2111,12 +2279,19 @@ _strings['Uninstall'] = 24037
 _strings['Install'] = 24038
 _strings['(Clear the current setting)'] = 24040
 _strings['Install from zip file'] = 24041
-_strings['Downloading %i%%'] = 24042
+if LEIA:
+    _strings['Downloading {0:d}%'] = 24042
+else:
+    _strings['Downloading %i%%'] = 24042
+
 _strings['Version:'] = 24051
 _strings['Disclaimer'] = 24052
 _strings['License:'] = 24053
 _strings['Check for updates'] = 24055
-_strings['Last updated %s'] = 24056
+if LEIA:
+    _strings['Last updated {0:s}'] = 24056
+else:
+    _strings['Last updated %s'] = 24056
 _strings['Auto update'] = 24063
 _strings['Add-on enabled'] = 24064
 _strings['Add-on updated'] = 24065
@@ -2140,7 +2315,10 @@ _strings['Add-on is incompatible due to unmet dependencies.'] = 24104
 _strings['Pause when searching for subtitles'] = 24105
 _strings['Specify where downloaded subtitles should be saved, the same location as the video or a custom location.'] = 24106
 _strings['Searching for subtitles ...'] = 24107
-_strings['%d subtitles found'] = 24108
+if LEIA:
+    _strings['{0:d} subtitles found'] = 24108
+else:
+    _strings['%d subtitles found'] = 24108
 _strings['No subtitles found'] = 24109
 _strings['Downloading subtitles ...'] = 24110
 _strings['Languages to download subtitles for'] = 24111
@@ -2162,10 +2340,17 @@ _strings['Notifications'] = 25000
 _strings['Hide foreign'] = 25001
 _strings['Select from all titles ...'] = 25002
 _strings['Show Blu-ray menu'] = 25003
-_strings['Play main title: %d'] = 25004
-_strings['Title: %d'] = 25005
+if LEIA:
+    _strings['Play main title: {0:d}'] = 25004
+    _strings['Title: {0:d}'] = 25005
+else:
+    _strings['Play main title: %d'] = 25004
+    _strings['Title: %d'] = 25005
 _strings['Select playback item'] = 25006
-_strings['Chapters: %u - duration: %s'] = 25007
+if LEIA:
+    _strings['Chapters: {0:d} - duration: {1:s}'] = 25007
+else:
+    _strings['Chapters: %u - duration: %s'] = 25007
 _strings['Playback of Blu-ray failed'] = 25008
 _strings['The menu of this Blu-ray is not supported'] = 25009
 _strings['QWERTY keyboard'] = 29801
@@ -2200,11 +2385,17 @@ _strings['Details'] = 33029
 _strings['Outlook'] = 33030
 _strings['Coverflow'] = 33031
 _strings['Translate text'] = 33032
-_strings['Map list %s category'] = 33033
+if LEIA:
+    _strings['Map list {0:s} category'] = 33033
+else:
+    _strings['Map list %s category'] = 33033
 _strings['Maps'] = 33035
 _strings['Hourly'] = 33036
 _strings['Weekend'] = 33037
-_strings['%s day'] = 33038
+if LEIA:
+    _strings['{0:s} day'] = 33038
+else:
+    _strings['%s day'] = 33038
 _strings['Alert'] = 33049
 _strings['Alerts'] = 33050
 _strings['Check'] = 33052
@@ -2493,3 +2684,205 @@ _strings['Unlimited'] = 37030
 _strings['GPU accelerated'] = 38010
 
 #GENERATED
+_strings['General'] = 30000
+_strings['Move down'] = 30001
+_strings['Move up'] = 30002
+_strings['Clear channels'] = 30003
+_strings['Remove channel'] = 30004
+_strings['Style'] = 30005
+_strings['Select stream...'] = 30006
+_strings['Add to list'] = 30007
+_strings['Channel'] = 30008
+_strings['Channels'] = 30009
+_strings['Players URL'] = 30010
+_strings['Install from URL'] = 30012
+_strings['Enable all players'] = 30013
+_strings['Failed to delete cache'] = 30014
+_strings['Background'] = 30015
+_strings['Custom style folder'] = 30016
+_strings['Custom background folder'] = 30017
+_strings['My channels'] = 30020
+_strings['New channel'] = 30021
+_strings['Add all liked lists to library'] = 30022
+_strings['Add my lists to library'] = 30023
+_strings['Remove from list'] = 30024
+_strings['Add liked lists to library'] = 30025
+_strings['All movie players'] = 30030
+_strings['All tv show players'] = 30031
+_strings['All musicvideo players'] = 30032
+_strings['All music players'] = 30033
+_strings['All live players'] = 30034
+_strings['All players'] = 30035
+_strings['Enabled'] = 30036
+_strings['Automated install'] = 30037
+_strings['Started'] = 30038
+_strings['Players'] = 30039
+_strings['Updated'] = 30040
+_strings['Movies library folder'] = 30041
+_strings['TV shows library folder'] = 30042
+_strings['Music library folder'] = 30043
+_strings['Music library folder'] = 30043
+_strings['Live library folder'] = 30044
+_strings['Setup done'] = 30045
+_strings['Completed'] = 30046
+_strings['Movies'] = 30100
+_strings['Enable movie players'] = 30101
+_strings['Movie'] = 30102
+_strings['Preferred movie player'] = 30110
+_strings['Preferred movie player from library'] = 30111
+_strings['Preferred movie player from context menu'] = 30112
+_strings['Would you like to automatically set MetalliQ as a movie source?'] = 30113
+_strings['Movie trailer'] = 30114
+_strings['Recommended movies'] = 30115
+_strings['TV shows'] = 30200
+_strings['Enable TV show players'] = 30201
+_strings['TV show'] = 30202
+_strings['Preferred TV show player'] = 30210
+_strings['Preferred TV show player from library'] = 30211
+_strings['Preferred TV show player from context menu'] = 30212
+_strings['Would you like to automatically set MetalliQ as a TV show source?'] = 30213
+_strings['TV trailer'] = 30214
+_strings['Recommended TV shows'] = 30215
+_strings['Library'] = 30300
+_strings['Library folders'] = 30301
+_strings['Library folder'] = 30302
+_strings['Update libraries'] = 30303
+_strings['Set added time to release date'] = 30305
+_strings['Enable library updates'] = 30306
+_strings['Movies library updates enabled'] = 30307
+_strings['TV shows library updates enabled'] = 30308
+_strings['Music library updates enabled'] = 30309
+_strings['Playlist'] = 30310
+_strings['Playlist folders'] = 30311
+_strings['Playlist folder'] = 30312
+_strings['Update playlists'] = 30313
+_strings['Video'] = 30314
+_strings['Audio'] = 30315
+_strings['Automatic movies library server'] = 30304
+_strings['Advanced'] = 30400
+_strings['Clear cache'] = 30401
+_strings['Use simple selection dialog'] = 30402
+_strings['Number of simultaneous searches'] = 30404
+_strings['Attempt to hide dialogs while MetalliQ is searching'] = 30410
+_strings['Hide progress dialogs'] = 30411
+_strings['Hide information dialogs'] = 30412
+_strings['Hide keyboard dialog'] = 30413
+_strings['Watchlist'] = 30414
+_strings['Please go to https://trakt.tv/activate and enter the code'] = 30415
+_strings['Next episodes'] = 30416
+_strings['Authenticate Trakt'] = 30417
+_strings['All'] = 30418
+_strings['You are about to add %s to %s.'] = 30419
+_strings['Your'] = 30420
+_strings['Entire'] = 30421
+_strings['You must authenticate with Trakt. Do you want to authenticate now?'] = 30422
+_strings['Calendar'] = 30423
+_strings['Recommendations'] = 30424
+_strings['Collection'] = 30425
+_strings['Live'] = 30500
+_strings['Enable live players'] = 30501
+_strings['Preferred live player'] = 30510
+_strings['Preferred live player from library'] = 30511
+_strings['Preferred live player from context menu'] = 30512
+_strings['Would you like to automatically set MetalliQ as a channel source?'] = 30513
+_strings['Genres'] = 30601
+_strings['Select default player'] = 30602
+_strings['Show info'] = 30603
+_strings['Video not found :('] = 30604
+_strings['Add to library'] = 30605
+_strings['Do you want to remove your existing players first?'] = 30606
+_strings['Enter password'] = 30607
+_strings['Players updated'] = 30608
+_strings['Enable players'] = 30609
+_strings['Season'] = 30610
+_strings['Top rated'] = 30612
+_strings['Blockbusters'] = 30613
+_strings['On the air'] = 30614
+_strings['Update players'] = 30615
+_strings['Search'] = 30617
+_strings['Search for '] = 30618
+_strings['Next >>'] = 30619
+_strings['Error'] = 30620
+_strings['Popular'] = 30621
+_strings['Context player'] = 30622
+_strings['Failed to update players'] = 30623
+_strings['In theatres'] = 30624
+_strings['Select player'] = 30625
+_strings['Warning'] = 30626
+_strings['Library setup'] = 30627
+_strings['Play with...'] = 30628
+_strings['Trending'] = 30629
+_strings['Personal'] = 30630
+_strings['Aired'] = 30631
+_strings['Premiered'] = 30632
+_strings['Edit query'] = 30633
+_strings['Search artist'] = 30634
+_strings['Search album'] = 30635
+_strings['Search track'] = 30636
+_strings['Search list'] = 30637
+_strings['Search'] = 30638
+_strings['Next page'] = 30639
+_strings['Choose player for this TVShow'] = 30640
+_strings['%s: search for %s using "%s"'] = 30641
+_strings['Search for %s using "%s"'] = 30642
+_strings['Search for "%s" in %s'] = 30643
+_strings['Preferred music type'] = 30699
+_strings['Musicvideos'] = 30700
+_strings['Enable musicvideo players'] = 30701
+_strings['Musicvideo'] = 30702
+_strings['Preferred musicvideo player'] = 30710
+_strings['Preferred musicvideo player from library'] = 30711
+_strings['Preferred musicvideo player from context menu'] = 30712
+_strings['Would you like to automatically set MetalliQ as a musicvideo source?'] = 30713
+_strings['Personal'] = 30714
+_strings['Popular'] = 30715
+_strings['Most played'] = 30716
+_strings['Most watched'] = 30717
+_strings['Most collected'] = 30718
+_strings['Related movies'] = 30719
+_strings['Period to use for Most-sections'] = 30720
+_strings['Items per page'] = 30721
+_strings['Number of days to use for Recently updated-section'] = 30722
+_strings['Recently updated'] = 30723
+_strings['Music'] = 30800
+_strings['Enable music players'] = 30801
+_strings['Play random'] = 30802
+_strings['Top artists'] = 30803
+_strings['Top tracks'] = 30804
+_strings['Prefered music player'] = 30810
+_strings['Prefered music player from library'] = 30811
+_strings['Preferred music player from context menu'] = 30812
+_strings['Would you like to automatically set MetalliQ as a music source?'] = 30813
+_strings['[COLOR ff0084ff]Q[/COLOR]lick[COLOR ff0084ff]P[/COLOR]lay'] = 30814
+_strings['Lists'] = 30815
+_strings['Liked'] = 30816
+_strings['My'] = 30817
+_strings['Add TV shows to library using preferred library player?'] = 30818
+_strings['Choose movie'] = 30819
+_strings['Add movies played by name to library automatically?'] = 30820
+_strings['Add TV shows played by name to library automatically?'] = 30821
+_strings['Meta'] = 30822
+_strings['Adding music to database'] = 30823
+_strings['Enable library updates'] = 30824
+_strings['Appearance'] = 30825
+_strings['Views'] = 30826
+_strings['Language for TMDb'] = 30827
+_strings['Force views'] = 30828
+_strings['Extended movie info'] = 30829
+_strings['Extended tv show info'] = 30830
+_strings['Play by name'] = 30831
+_strings['Play by name only'] = 30832
+_strings['MetalliQ'] = 30833
+_strings['Add movies to library using preferred library player?'] = 30834
+_strings['Add all lists to library'] = 30835
+_strings['List'] = 30836
+_strings['Album'] = 30837
+_strings['Artist'] = 30838
+_strings['Track'] = 30839
+_strings['Albums'] = 30840
+_strings['Artists'] = 30841
+_strings['Tracks'] = 30842
+_strings['pages to consider for random playback'] = 30901
+_strings['Enable library sync (collection)'] = 30902
+_strings['Enable library sync (watchlist)'] = 30903
+

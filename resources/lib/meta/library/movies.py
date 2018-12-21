@@ -4,7 +4,7 @@ import urllib
 
 from xbmcswift2 import xbmc, xbmcvfs
 
-from meta import plugin, import_tmdb, LANG
+from meta import plugin, import_tmdb, LANG, REGI
 from meta.utils.text import date_to_timestamp
 from meta.library.tools import scan_library, add_source
 from meta.utils.rpc import RPC
@@ -161,7 +161,7 @@ def setup_library(library_folder):
         if dialogs.yesno(_("Library setup"), msg):
             source_thumbnail = get_icon_path("movies")
             source_name = "MetalliQ " + _("Movies")
-            source_content = "('{0}','movies','metadata.themoviedb.org','',2147483647,1,'<settings><setting id=\"RatingS\" value=\"TMDb\" /><setting id=\"certprefix\" value=\"Rated \" /><setting id=\"fanart\" value=\"true\" /><setting id=\"keeporiginaltitle\" value=\"false\" /><setting id=\"language\" value=\"{1}\" /><setting id=\"tmdbcertcountry\" value=\"us\" /><setting id=\"trailer\" value=\"true\" /></settings>',0,0,NULL,NULL)".format(library_folder, LANG)
+            source_content = "('{0}','movies','metadata.themoviedb.org','',2147483647,1,'<settings><setting id=\"RatingS\" value=\"TMDb\" /><setting id=\"certprefix\" value=\"Rated \" /><setting id=\"fanart\" value=\"true\" /><setting id=\"imdbanyway\" value=\"true\" /><setting id=\"keeporiginaltitle\" value=\"false\" /><setting id=\"language\" value=\"{1}\" /><setting id=\"tmdbcertcountry\" value=\"{2}\" /><setting id=\"trailer\" value=\"true\" /></settings>',0,0,NULL,NULL)".format(library_folder, LANG, REGI)
             add_source(source_name, library_folder, source_content, source_thumbnail)
     # return translated path
     return xbmc.translatePath(library_folder)
@@ -178,7 +178,7 @@ def auto_movie_setup(library_folder):
             xbmcvfs.mkdir(library_folder)
             source_thumbnail = get_icon_path("movies")
             source_name = "MetalliQ " + _("Movies")
-            source_content = "('{0}','movies','metadata.themoviedb.org','',2147483647,1,'<settings><setting id=\"RatingS\" value=\"TMDb\" /><setting id=\"certprefix\" value=\"Rated \" /><setting id=\"fanart\" value=\"true\" /><setting id=\"keeporiginaltitle\" value=\"false\" /><setting id=\"language\" value=\"{1}\" /><setting id=\"tmdbcertcountry\" value=\"us\" /><setting id=\"trailer\" value=\"true\" /></settings>',0,0,NULL,NULL)".format(library_folder, LANG)
+            source_content = "('{0}','movies','metadata.themoviedb.org','',2147483647,1,'<settings><setting id=\"RatingS\" value=\"TMDb\" /><setting id=\"certprefix\" value=\"Rated \" /><setting id=\"fanart\" value=\"true\" /><setting id=\"imdbanyway\" value=\"true\" /><setting id=\"keeporiginaltitle\" value=\"false\" /><setting id=\"language\" value=\"{1}\" /><setting id=\"tmdbcertcountry\" value=\"{2}\" /><setting id=\"trailer\" value=\"true\" /></settings>',0,0,NULL,NULL)".format(library_folder, LANG, REGI)
             add_source(source_name, library_folder, source_content, source_thumbnail)
             return True
         except:

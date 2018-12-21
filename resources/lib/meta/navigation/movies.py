@@ -207,6 +207,10 @@ def tmdb_movies_blockbusters_to_library(page, confirm):
         page = int(page)
         pages = [page]
     except: pages = page_redux(page)
+    if int(xbmc.getInfoLabel('System.BuildVersion')[:2]) > 17:
+        add = _("Add {0:s}").format("'{0} ({1}) {2} {3}'".format("Blockbusters", "TMDb", _("page"), ','.join([str(p) for p in pages])))
+    else:
+        add = _("Add %s") % ("'{0} ({1}) {2} {3}'".format("Blockbusters", "TMDb", _("page"), ','.join([str(p) for p in pages])))
     if confirm == "no" or dialogs.yesno(_("Scan item to library"), "{0}[CR]{1}[CR]{2}".format(_("Library"), _("Add %s") % ("'{0} ({1}) {2} {3}'".format("Blockbusters", "TMDb", _("page"), ','.join([str(i) for i in pages]))),_("Are you sure?"))):
         items = {}
         movies = []
@@ -236,7 +240,11 @@ def tmdb_movies_now_playing_to_library(page, confirm):
         page = int(page)
         pages = [page]
     except: pages = page_redux(page)
-    if confirm == "no" or dialogs.yesno(_("Scan item to library"), "{0}[CR]{1}[CR]{2}".format(_("Library"), _("Add %s") % ("'{0} ({1}) {2} {3}'".format("In theatres", "TMDb", _("page"), ','.join([str(i) for i in pages]))),_("Are you sure?"))):
+    if int(xbmc.getInfoLabel('System.BuildVersion')[:2]) > 17:
+        add = _("Add {0:s}").format("'{0} ({1}) {2} {3}'".format("In theaters", "TMDb", _("page"), ','.join([str(p) for p in pages])))
+    else:
+        add = _("Add %s") % ("'{0} ({1}) {2} {3}'".format("In theaters", "TMDb", _("page"), ','.join([str(p) for p in pages])))
+    if confirm == "no" or dialogs.yesno(_("Scan item to library"), "{0}[CR]{1}[CR]{2}".format(_("Library"),add,_("Are you sure?"))):
         items = {}
         movies = []
         for i in pages: movies = movies + [m for m in tmdb_movies_now_playing(i, True)["results"] if m not in movies]
@@ -266,7 +274,11 @@ def tmdb_movies_popular_to_library(page, confirm):
         page = int(page)
         pages = [page]
     except: pages = page_redux(page)
-    if confirm == "no" or dialogs.yesno(_("Scan item to library"), "{0}[CR]{1}[CR]{2}".format(_("Library"), _("Add %s") % ("'{0} ({1}) {2} {3}'".format("Popular", "TMDb", _("page"), ','.join([str(i) for i in pages]))),_("Are you sure?"))):
+    if int(xbmc.getInfoLabel('System.BuildVersion')[:2]) > 17:
+        add = _("Add {0:s}").format("'{0} ({1}) {2} {3}'".format("Popular", "TMDb", _("page"), ','.join([str(p) for p in pages])))
+    else:
+        add = _("Add %s") % ("'{0} ({1}) {2} {3}'".format("Popular", "TMDb", _("page"), ','.join([str(p) for p in pages])))
+    if confirm == "no" or dialogs.yesno(_("Scan item to library"), "{0}[CR]{1}[CR]{2}".format(_("Library"), add,_("Are you sure?"))):
         items = {}
         movies = []
         for i in pages: movies = movies + [m for m in tmdb_movies_popular(i, True)["results"] if m not in movies]
@@ -295,7 +307,11 @@ def tmdb_movies_top_rated_to_library(page, confirm):
         page = int(page)
         pages = [page]
     except: pages = page_redux(page)
-    if confirm == "no" or dialogs.yesno(_("Scan item to library"), "{0}[CR]{1}[CR]{2}".format(_("Library"), _("Add %s") % ("'{0} ({1}) {2} {3}'".format("Iop rated", "TMDb", _("page"), ','.join([str(i) for i in pages]))),_("Are you sure?"))):
+    if int(xbmc.getInfoLabel('System.BuildVersion')[:2]) > 17:
+        add = _("Add {0:s}").format("'{0} ({1}) {2} {3}'".format("Top rated", "TMDb", _("page"), ','.join([str(p) for p in pages])))
+    else:
+        add = _("Add %s") % ("'{0} ({1}) {2} {3}'".format("Top rated", "TMDb", _("page"), ','.join([str(p) for p in pages])))
+    if confirm == "no" or dialogs.yesno(_("Scan item to library"), "{0}[CR]{1}[CR]{2}".format(_("Library"), add,_("Are you sure?"))):
         items = {}
         movies = []
         for i in pages: movies = movies + [m for m in tmdb_movies_top_rated(i, True)["results"] if m not in movies]
@@ -483,7 +499,11 @@ def trakt_movies_played_to_library(page, confirm, uncached=False):
         page = int(page)
         pages = [page]
     except: pages = page_redux(page)
-    if confirm == "no" or dialogs.yesno(_("Scan item to library"), "{0}[CR]{1}[CR]{2}".format(_("Library"), _("Add %s") % ("'{0} ({1}) {2} {3}'".format("Most played", "Trakt", _("page"), ','.join([str(i) for i in pages]))),_("Are you sure?"))):
+    if int(xbmc.getInfoLabel('System.BuildVersion')[:2]) > 17:
+        add = _("Add {0:s}").format("'{0} ({1}) {2} {3}'".format("Most played", "Trakt", _("page"), ','.join([str(p) for p in pages])))
+    else:
+        add = _("Add %s") % ("'{0} ({1}) {2} {3}'".format("Most played", "Trakt", _("page"), ','.join([str(p) for p in pages])))
+    if confirm == "no" or dialogs.yesno(_("Scan item to library"), "{0}[CR]{1}[CR]{2}".format(_("Library"), add,_("Are you sure?"))):
         items = {}
         movies = []
         for i in pages: movies = movies + [m for m in trakt_movies_played(i, True) if m not in movies]
@@ -513,7 +533,11 @@ def trakt_movies_watched_to_library(page, confirm, uncached=False):
         page = int(page)
         pages = [page]
     except: pages = page_redux(page)
-    if confirm == "no" or dialogs.yesno(_("Scan item to library"), "{0}[CR]{1}[CR]{2}".format(_("Library"), _("Add %s") % ("'{0} ({1}) {2} {3}'".format("Most watched", "Trakt", _("page"), ','.join([str(i) for i in pages]))),_("Are you sure?"))):
+    if int(xbmc.getInfoLabel('System.BuildVersion')[:2]) > 17:
+        add = _("Add {0:s}").format("'{0} ({1}) {2} {3}'".format("Most watched", "Trakt", _("page"), ','.join([str(p) for p in pages])))
+    else:
+        add = _("Add %s") % ("'{0} ({1}) {2} {3}'".format("Most watched", "Trakt", _("page"), ','.join([str(p) for p in pages])))
+    if confirm == "no" or dialogs.yesno(_("Scan item to library"), "{0}[CR]{1}[CR]{2}".format(_("Library"), add,_("Are you sure?"))):
         items = {}
         movies = []
         for i in pages: movies = movies + [m for m in trakt_movies_watched(i, True) if m not in movies]
@@ -543,7 +567,11 @@ def trakt_movies_collected_to_library(page, confirm, uncached=False):
         page = int(page)
         pages = [page]
     except: pages = page_redux(page)
-    if confirm == "no" or dialogs.yesno(_("Scan item to library"), "{0}[CR]{1}[CR]{2}".format(_("Library"), _("Add %s") % ("'{0} ({1}) {2} {3}'".format("Most collected", "Trakt", _("page"), ','.join([str(i) for i in pages]))),_("Are you sure?"))):
+    if int(xbmc.getInfoLabel('System.BuildVersion')[:2]) > 17:
+        add = _("Add {0:s}").format("'{0} ({1}) {2} {3}'".format("Most collected", "Trakt", _("page"), ','.join([str(p) for p in pages])))
+    else:
+        add = _("Add %s") % ("'{0} ({1}) {2} {3}'".format("Most collected", "Trakt", _("page"), ','.join([str(p) for p in pages])))
+    if confirm == "no" or dialogs.yesno(_("Scan item to library"), "{0}[CR]{1}[CR]{2}".format(_("Library"), add,_("Are you sure?"))):
         items = {}
         movies = []
         for i in pages: movies = movies + [m for m in trakt_movies_collected(i, True) if m not in movies]
@@ -573,7 +601,11 @@ def trakt_movies_popular_to_library(page, confirm, uncached=False):
         page = int(page)
         pages = [page]
     except: pages = page_redux(page)
-    if confirm == "no" or dialogs.yesno(_("Scan item to library"), "{0}[CR]{1}[CR]{2}".format(_("Library"), _("Add %s") % ("'{0} ({1}) {2} {3}'".format("Popular", "Trakt", _("page"), ','.join([str(i) for i in pages]))),_("Are you sure?"))):
+    if int(xbmc.getInfoLabel('System.BuildVersion')[:2]) > 17:
+        add = _("Add {0:s}").format("'{0} ({1}) {2} {3}'".format("Popular", "Trakt", _("page"), ','.join([str(p) for p in pages])))
+    else:
+        add = _("Add %s") % ("'{0} ({1}) {2} {3}'".format("Popular", "Trakt", _("page"), ','.join([str(p) for p in pages])))
+    if confirm == "no" or dialogs.yesno(_("Scan item to library"), "{0}[CR]{1}[CR]{2}".format(_("Library"), add,_("Are you sure?"))):
         items = {}
         movies = []
         for i in pages: movies = movies + [m for m in trakt_movies_popular(i, True) if m not in movies]
@@ -603,7 +635,11 @@ def trakt_movies_trending_to_library(page, confirm, uncached=False):
         page = int(page)
         pages = [page]
     except: pages = page_redux(page)
-    if confirm == "no" or dialogs.yesno(_("Scan item to library"), "{0}[CR]{1}[CR]{2}".format(_("Library"), _("Add %s") % ("'{0} ({1}) {2} {3}'".format("Trending", "Trakt", _("page"), ','.join([str(i) for i in pages]))),_("Are you sure?"))):
+    if int(xbmc.getInfoLabel('System.BuildVersion')[:2]) > 17:
+        add = _("Add {0:s}").format("'{0} ({1}) {2} {3}'".format("Trending", "Trakt", _("page"), ','.join([str(p) for p in pages])))
+    else:
+        add = _("Add %s") % ("'{0} ({1}) {2} {3}'".format("Trending", "Trakt", _("page"), ','.join([str(p) for p in pages])))
+    if confirm == "no" or dialogs.yesno(_("Scan item to library"), "{0}[CR]{1}[CR]{2}".format(_("Library"), add,_("Are you sure?"))):
         items = {}
         movies = []
         for i in pages: movies = movies + [m for m in trakt_movies_trending(i, True) if m not in movies]
@@ -719,7 +755,11 @@ def tmdb_movies_genre_to_library(id, page, confirm):
         page = int(page)
         pages = [page]
     except: pages = page_redux(page)
-    if confirm == "no" or dialogs.yesno(_("Scan item to library"), "{0}[CR]{1}[CR]{2}".format(_("Library"), _("Add %s") % ("'{0} ({1}) {2} {3}'".format(name, "TMDb", _("page"), ','.join([str(p) for p in pages]))),_("Are you sure?"))):
+    if int(xbmc.getInfoLabel('System.BuildVersion')[:2]) > 17:
+        add = _("Add {0:s}").format("'{0} ({1}) {2} {3}'".format(name, "TMDb", _("page"), ','.join([str(p) for p in pages])))
+    else:
+        add = _("Add %s") % ("'{0} ({1}) {2} {3}'".format(name, "TMDb", _("page"), ','.join([str(p) for p in pages])))
+    if confirm == "no" or dialogs.yesno(_("Scan item to library"), "{0}[CR]{1}[CR]{2}".format(_("Library"), add,_("Are you sure?"))):
         items = {}
         movies = []
         for g in genres:
@@ -735,29 +775,40 @@ def tmdb_movies_play_random_genre(id):
         result.update(tmdb_movies_genre(id, i, raw=True))
     tmdb_movies_play_random(result)
 
-
 @plugin.route('/movies/trakt/collection_to_library')
-def trakt_movies_collection_to_library(preaprove=False, uncached = False):
+def trakt_movies_collection_to_library(preaprove=False, uncached=False):
     from trakt import trakt
-    if preaprove  or dialogs.yesno(_("Scan item to library"), "{0}[CR]{1}".format(_("Add %s") % ("'{0} {1} {2}'".format("Trakt", _("movie"), _("Collection").lower())),_("Are you sure?"))):
+    if int(xbmc.getInfoLabel('System.BuildVersion')[:2]) > 17:
+        add = _("Add {0:s}").format("'{0} {1} {2}'".format("Trakt", _("movie"), _("Collection").lower()))
+    else:
+        add = _("Add %s") % ("'{0} {1} {2}'".format("Trakt", _("movie"), _("Collection").lower()))
+    if preaprove or dialogs.yesno(_("Scan item to library"), "{0}[CR]{1}".format(_("Add %s") % ("'{0} {1} {2}'".format("Trakt", _("movie"), _("Collection").lower())),_("Are you sure?"))):
         if uncached:
             movies_add_all_to_library(trakt.trakt_get_collection_uncached("movies"), True)
         else:
             movies_add_all_to_library(trakt.trakt_get_collection("movies"))
 
 @plugin.route('/movies/trakt/watchlist_to_library')
-def trakt_movies_watchlist_to_library(preaprove=False, uncached = False):
+def trakt_movies_watchlist_to_library(preaprove=False, uncached=False):
     from trakt import trakt
-    if preaprove  or dialogs.yesno(_("Scan item to library"), "{0}[CR]{1}".format(_("Add %s") % ("'{0} {1} {2}'".format("Trakt", _("movie"), _("Watchlist").lower())),_("Are you sure?"))):
+    if int(xbmc.getInfoLabel('System.BuildVersion')[:2]) > 17:
+        add = _("Add {0:s}").format("'{0} {1} {2}'".format("Trakt", _("movie"), _("Watchlist").lower()))
+    else:
+        add = _("Add %s") % ("'{0} {1} {2}'".format("Trakt", _("movie"), _("Watchlist").lower()))
+    if preaprove or dialogs.yesno(_("Scan item to library"), "{0}[CR]{1}".format(_("Add %s") % ("'{0} {1} {2}'".format("Trakt", _("movie"), _("Watchlist").lower())),_("Are you sure?"))):
         if uncached:
             movies_add_all_to_library(trakt.trakt_get_watchlist_uncached("movies"), True)
         else:
             movies_add_all_to_library(trakt.trakt_get_watchlist("movies"))
 
 @plugin.route('/movies/trakt/recommendations_to_library')
-def trakt_movies_recommendations_to_library():
+def trakt_movies_recommendations_to_library(preaprove=False):
     from trakt import trakt
-    if dialogs.yesno(_("Scan item to library"), "{0}[CR]{1}".format(_("Add %s") % ("'{0} {1} {2}'".format("Trakt", _("movie"), _("Recommendations").lower())),_("Are you sure?"))):
+    if int(xbmc.getInfoLabel('System.BuildVersion')[:2]) > 17:
+        add = _("Add {0:s}").format("'{0} {1} {2}'".format("Trakt", _("movie"), _("Recommendations").lower()))
+    else:
+        add = _("Add %s") % ("'{0} {1} {2}'".format("Trakt", _("movie"), _("Recommendations").lower()))
+    if preaprove or dialogs.yesno(_("Scan item to library"), "{0}[CR]{1}".format(add,_("Are you sure?"))):
         movies_add_all_to_library([{u'movie': i} for i in trakt.get_recommendations("movies")])
 
 @plugin.route('/movies/set_library_player/<path>')
@@ -767,7 +818,11 @@ def set_movie_library_player(path):
     players.insert(0, ADDON_SELECTOR)
     players.insert(0, ADDON_DEFAULT)
     # let the user select one player
-    selection = dialogs.select("{0}".format(_("Select %s") % "{0} {1}".format(_("Default").lower(), _("Player").lower())), [p.title for p in players])
+    if int(xbmc.getInfoLabel('System.BuildVersion')[:2]) > 17:
+        header = _("Select {0:s}").format("{0} {1}".format(_("Default").lower(), _("Player").lower()))
+    else:
+        header = _("Select %s") % "{0} {1}".format(_("Default").lower(), _("Player").lower())
+    selection = dialogs.select("{0}".format(header), [p.title for p in players])
     if selection == -1:
         return
     # get selected player
@@ -782,7 +837,7 @@ def set_movie_library_player(path):
 def movies_add_all_to_library(items, noscan=False):
     library_folder = setup_library(plugin.get_setting(SETTING_MOVIES_LIBRARY_FOLDER, unicode))
     if "results" in items: ids = '\n'.join([str(r["id"]) for r in items["results"]])
-    else: ids = '\n'.join([i["movie"]["ids"]["imdb"] if i["movie"]["ids"]["imdb"] != None and i["movie"]["ids"]["imdb"] != "" else i["movie"]["ids"]["tmdb"] for i in items])
+    else: ids = '\n'.join([i["movie"]["ids"]["imdb"] if i["movie"]["ids"]["imdb"] != None and i["movie"]["ids"]["imdb"] != "" else str(i["movie"]["ids"]["tmdb"]) for i in items])
     movies_batch_add_file = plugin.get_setting(SETTING_MOVIES_BATCH_ADD_FILE_PATH, unicode)
     if xbmcvfs.exists(movies_batch_add_file):
         batch_add_file = xbmcvfs.File(movies_batch_add_file)
@@ -811,6 +866,23 @@ def movies_add_to_library(src, id):
         if imdb_id:
             src = "imdb"
             id = imdb_id
+            ids = [str(movie.get('id')), str(movie.get('imdb_id', None))]
+            try:
+                libmovies = RPC.VideoLibrary.GetMovies(properties=["imdbnumber", "title", "year"])['movies']
+                libmovies = [i for i in libmovies if str(i['imdbnumber']) in ids or (str(i['year']) == str(movie.get('year', 0)) and equals(movie.get['title'], i['title']))]
+                libmovie = libmovies[0]
+            except:
+                libmovie = []
+    else:
+        ids = [str(id), "None"]
+        try:
+            libmovies = RPC.VideoLibrary.GetMovies(properties=["imdbnumber", "title", "year"])['movies']
+            libmovies = [i for i in libmovies if str(i['imdbnumber']) in ids]
+            libmovie = libmovies[0]
+        except:
+            libmovie = []
+    if libmovie != []:
+        return
     players = active_players("movies")
     if plugin.get_setting(SETTING_MOVIES_DEFAULT_AUTO_ADD, bool) == True:
         player = plugin.get_setting(SETTING_MOVIES_DEFAULT_PLAYER_FROM_LIBRARY, unicode)
@@ -826,7 +898,11 @@ def movies_add_to_library(src, id):
         add_movie_to_library(library_folder, src, id, play_plugin=plugin.get_setting(SETTING_MOVIES_DEFAULT_PLAYER_FROM_LIBRARY, unicode))
     else:
         add_movie_to_library(library_folder, src, id, play_plugin=player.id)
-        dialogs.notify(msg=player.id, title=_("%s not found").replace("%s ",""), delay=3000, image=get_icon_path("movies"))
+        if int(xbmc.getInfoLabel('System.BuildVersion')[:2]) > 17:
+            title = _("{0:s} not found").replace("{0:s} ","")
+        else:
+            title = _("%s not found").replace("%s ","")
+        dialogs.notify(msg=player.id, title=title, delay=3000, image=get_icon_path("movies"))
     scan_library(type="video", path=plugin.get_setting(SETTING_MOVIES_LIBRARY_FOLDER, unicode))
 
 @plugin.route('/movies/add_to_library_parsed/<src>/<id>/<player>')
@@ -855,7 +931,12 @@ def movies_batch_add_to_library():
             r = f.read()
             f.close()
             ids = r.split('\n')
-        except: return dialogs.notify(msg='Movies Batch Add File', title=_("%s not found").replace("%s ",""), delay=3000, image=get_icon_path("movies"))
+        except:
+            if int(xbmc.getInfoLabel('System.BuildVersion')[:2]) > 17:
+                title = _("{0:s} not found").replace("{0:s} ","")
+            else:
+                title = _("%s not found").replace("%s ","")
+            return dialogs.notify(msg='Movies Batch Add File', title=title, delay=3000, image=get_icon_path("movies"))
         library_folder = setup_library(plugin.get_setting(SETTING_MOVIES_LIBRARY_FOLDER, unicode))
         import_tmdb()
         for id in ids:
@@ -1008,7 +1089,12 @@ def movies_play_by_name(name, lang = "en"):
     import_tmdb()
     from meta.utils.text import parse_year
     items = tmdb.Search().movie(query=name, language=lang, page=1)["results"]
-    if not items: return dialogs.ok(_("%s not found") % _("Movie"), "{0} {1}".format(_("No movie information found on TMDB for"), name))
+    if not items:
+        if int(xbmc.getInfoLabel('System.BuildVersion')[:2]) > 17:
+           header = _("{0:s} not found").format(_("Movie"))
+        else:
+            header = _("%s not found") % _("Movie")
+        return dialogs.ok(header, "{0} {1}".format(_("No movie information found on TMDB for"), name))
     if len(items) > 1:
         selection = dialogs.select("{0}".format(_("Choose thumbnail").replace(_("Thumbnail").lower(),_("Movie").lower())), ["{0} ({1})".format(
             to_utf8(s["title"]),
@@ -1024,7 +1110,12 @@ def guide_movies_play_by_name(name, lang = "en"):
     import_tmdb()
     from meta.utils.text import parse_year
     items = tmdb.Search().movie(query=name, language=lang, page=1)["results"]
-    if not items: return dialogs.ok(_("%s not found") % _("Movie"), "{0} {1}".format(_("No movie information found on TMDB for"), name))
+    if not items:
+        if int(xbmc.getInfoLabel('System.BuildVersion')[:2]) > 17:
+           header = _("{0:s} not found").format(_("Movie"))
+        else:
+            header = _("%s not found") % _("Movie")
+        return dialogs.ok(header, "{0} {1}".format(_("No movie information found on TMDB for"), name))
     if len(items) > 1:
         selection = dialogs.select("{0}".format(_("Choose thumbnail").replace(_("Thumbnail").lower(),_("Movie").lower())), ["{0} ({1})".format(
             to_utf8(s["title"]),
@@ -1069,7 +1160,12 @@ def make_movie_item(movie_info, is_list = False):
     elif imdb_id:
         id = imdb_id 
         src = 'imdb'
-    else: dialogs.notify(msg="tmdb or imdb id", title=_("%s not found").replace("%s ",""), delay=3000, image=get_icon_path("movies"))
+    else:
+        if int(xbmc.getInfoLabel('System.BuildVersion')[:2]) > 17:
+            title = _("{0:s} not found").replace("{0:s} ","")
+        else:
+            title = _("%s not found").replace("%s ","")
+        dialogs.notify(msg="tmdb or imdb id", title=title, delay=3000, image=get_icon_path("movies"))
     if xbmc.getCondVisibility("system.hasaddon(script.qlickplay)"): context_menu = [(_("Scan item to library"),"RunPlugin({0})".format(plugin.url_for("movies_add_to_library", src=src, id=id))), ("%s %s" % (_("Movie"), _("Trailer").lower()),"RunScript(script.qlickplay,info=playtrailer,id={0})".format(id)), ("[COLOR ff0084ff]Q[/COLOR]lick[COLOR ff0084ff]P[/COLOR]lay", "RunScript(script.qlickplay,info=movieinfo,id={0})".format(id)), ("%s %s (%s)" % ("Recommended", _("movies"), "TMDb"),"ActivateWindow(10025,plugin://script.qlickplay/?info=similarmovies&id={0})".format(id))]
     elif xbmc.getCondVisibility("system.hasaddon(script.extendedinfo)"): context_menu = [(_("Scan item to library"),"RunPlugin({0})".format(plugin.url_for("movies_add_to_library", src=src, id=id))), ("%s %s" % (_("Movie"), _("Trailer").lower()),"RunScript(script.extendedinfo,info=playtrailer,id={0})".format(id)), (_("Extended movie info"), "RunScript(script.extendedinfo,info=extendedinfo,id={0})".format(id)), ("%s %s (%s)" % ("Recommended", _("movies"), "TMDb"),"ActivateWindow(10025,plugin://script.extendedinfo/?info=similarmovies&id={0})".format(id))]
     else: context_menu = [(_("Scan item to library"),"RunPlugin({0})".format(plugin.url_for("movies_add_to_library", src=src, id=id)))]

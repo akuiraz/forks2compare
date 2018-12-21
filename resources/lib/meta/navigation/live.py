@@ -109,9 +109,13 @@ def live():
             },
         ]
     channels = get_channels()
+    if int(xbmc.getInfoLabel('System.BuildVersion')[:2]) > 17:
+        label = _("Remove {0:s}").format(_("Channels").lower())
+    else:
+        label = _("Remove %s") % _("Channels").lower()
     if channels:
         items.append({
-            'label': _("Remove %s") % _("Channels").lower(),
+            'label': label,
             'path': plugin.url_for("clear_channels"),
             'icon': get_icon_path("clear"),
         })
@@ -130,7 +134,7 @@ def live():
         if channel in channels:
             context_menu.append(
                 (
-                    _("Remove %s") % _("Channel").lower(),
+                    label,
                     "RunPlugin({0})".format(plugin.url_for("remove_channel", channel=channel))
                 )
             )
@@ -166,6 +170,10 @@ def browse_library_channels():
         },
     ]
     library_channels = get_library_channels()
+    if int(xbmc.getInfoLabel('System.BuildVersion')[:2]) > 17:
+        label = _("Remove {0:s}").format(_("Channels").lower())
+    else:
+        label = _("Remove %s") % _("Channels").lower()
     if library_channels:
         for (index, library_channel) in enumerate(library_channels):
             if library_channel != None:
@@ -175,7 +183,7 @@ def browse_library_channels():
                     'icon': get_icon_path("library"),
                     'context_menu': [
                         (
-                            _("Remove %s") % _("Channel").lower(),
+                            label,
                             "RunPlugin({0})".format(plugin.url_for("live_remove_from_channel", channel=library_channel))
                         )]
                 })

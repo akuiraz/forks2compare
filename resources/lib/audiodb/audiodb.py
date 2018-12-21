@@ -24,28 +24,36 @@ def search(mode, artist, album="", track=""):
 @plugin.cached(TTL=CACHE_TTL, cache="audiodb")
 def search_details_from_artist(artist_name):
     return call_audiodb("search", params={'s': artist_name})
+
 @plugin.cached(TTL=CACHE_TTL, cache="audiodb")
 def search_albums_from_artist(artist_name):
     return call_audiodb("searchalbum", params={'s': artist_name})
+
 @plugin.cached(TTL=CACHE_TTL, cache="audiodb")
 def search_album_from_artist_and_title(artist_name, album_name):
     return call_audiodb("searchalbum", params={'s': artist_name, 'a': album_name})
+
 @plugin.cached(TTL=CACHE_TTL, cache="audiodb")
 def search_album_from_title(album_name):
     return call_audiodb("searchalbum", params={'a': album_name})
+
 @plugin.cached(TTL=CACHE_TTL, cache="audiodb")
 def search_track_from_artist_or_title(artist_name, track_name):
     return call_audiodb("searchtrack", params={'s': artist_name, 't': track_name})
+
 @plugin.cached(TTL=CACHE_TTL, cache="audiodb")
 def search_dvd_from_artist_or_title(artist_name, dvd_name):
     return call_audiodb("searchmdvd", params={'s': artist_name, 'a': dvd_name})
+
 @plugin.cached(TTL=CACHE_TTL, cache="audiodb")
 def search_disco_from_artist(artist_name):
     return call_audiodb("discography", params={'s': artist_name})
+
 @plugin.cached(TTL=CACHE_TTL, cache="audiodb")
 def search_disco_from_mbid(mb_id):
     # md_id = Music_Brainz_Artist_ID
     return call_audiodb("discography-mb", params={'s': mb_id})
+
 # get artist info
 @plugin.cached(TTL=CACHE_TTL, cache="audiodb")
 def details_from_artist_id(artist_id):

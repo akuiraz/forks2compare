@@ -108,7 +108,12 @@ def get_video_link(players, params, mode, use_simple=False):
                 else:
                     index = dialogs.select(_("Play using..."), [x['label'] for x in links])
                     if index > -1: selection = links[index]
-            else: dialogs.ok(_("Error"), _("%s not found") % _("Video"))
+            else:
+                if int(xbmc.getInfoLabel('System.BuildVersion')[:2]) > 17:
+                    message = _("{0:s} not found").format(_("Video"))
+                else:
+                    message =  _("%s not found") % _("Video")
+                dialogs.ok(_("Error"), message)
     finally: lister.stop()
     return selection
 
@@ -127,10 +132,15 @@ def on_play_video(mode, players, params, trakt_ids=None):
     if not selection: return
     # Get selection details
     link = selection['path']
+    plugin.log.info('QQQQQ Selection = {}'.format(selection))
     action = selection.get('action', '')
     plugin.log.info('Playing url: %s' % to_utf8(link))
     # Activate link
-    if action == "ACTIVATE": action_activate(link)
+    if link.startswith("videodb://"):
+        return xbmc.executebuiltin('ActivateWindow(10025,"%s")'% link)
+    elif link.endswith(".strm"):
+        return action_playmedia(link)
+    elif action == "ACTIVATE": action_activate(link)
     elif action == "RUN": action_run(link)
     elif action == "PRERUN": action_prerun(link)
     elif action == "PLAYMEDIA": action_playmedia(link)

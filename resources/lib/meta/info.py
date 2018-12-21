@@ -40,7 +40,7 @@ def get_trakt_movie_metadata(movie, genres_dict=None):
     info['votes'] = movie.get('votes')
     info['tagline'] = movie.get('tagline')
     info['plot'] = movie.get('overview')
-    if xbmc.getInfoLabel('System.BuildVersion')[:2] == "14": info['duration'] = int(movie.get('runtime') or 0)
+    if int(xbmc.getInfoLabel('System.BuildVersion')[:2]) < 15: info['duration'] = int(movie.get('runtime') or 0)
     else: info['duration'] = (movie.get('runtime') or 0) * 60
     info['mpaa'] = movie.get('certification')
     info['playcount'] = movie.get('plays')
@@ -114,7 +114,7 @@ def get_tvshow_metadata_tvdb(tvdb_show, banners=True):
     info['year'] = tvdb_show.get('year', 0)
     info['studio'] = tvdb_show.get('network','')
     info['imdb_id'] = tvdb_show.get('imdb_id', '')
-    if xbmc.getInfoLabel('System.BuildVersion')[:2] == "14": info['duration'] = int(tvdb_show.get('runtime') or 0)
+    if int(xbmc.getInfoLabel('System.BuildVersion')[:2]) < 15: info['duration'] = int(tvdb_show.get('runtime') or 0)
     else: info['duration'] = int(tvdb_show.get('runtime') or 0) * 60
     return info
 

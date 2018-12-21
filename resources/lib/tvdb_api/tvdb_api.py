@@ -5,6 +5,7 @@ import datetime
 import zipfile
 import requests
 import requests_cache
+from xbmcswift2 import xbmc
 from urllib import quote as url_quote
 from settings import SETTING_AIRDATE_OFFSET
 from meta import plugin
@@ -57,6 +58,10 @@ class Show(dict):
             # Non-numeric request is for show-data
             return dict.__getitem__(self.data, key)
             
+        if int(xbmc.getInfoLabel('System.BuildVersion')[:2]) > 17:
+            message = _("{0:s} not found").format(key)
+        else:
+            message = _("%s not found") % key
         raise Exception("%s not found"  % key)
 
     def get_poster(self, language=None, default=None):
@@ -132,8 +137,8 @@ class Episode(dict):
     def has_aired(self, flexible=False):
         if not self.get('firstaired', None):
             return flexible
-        return self.get_air_time() <= time.time()
-        
+        return self.get_air_time() <= time.time() - (plugin.get_setting(SETTING_AIRDATE_OFFSET, int) * 24 * 60 * 60)
+
 class Tvdb:
     def __init__(self, api_key, language="en", cache="."):
         config = {}        
