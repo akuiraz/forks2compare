@@ -3,8 +3,12 @@ from settings import SETTING_LANGUAGE_ID, SETTING_TVDB_API
 
 plugin = Plugin()
 
-if plugin.get_setting(SETTING_LANGUAGE_ID, unicode) == "system": LANG = xbmc.getLanguage(xbmc.ISO_639_1,)
-else: LANG = plugin.get_setting(SETTING_LANGUAGE_ID, unicode)
+if plugin.get_setting(SETTING_LANGUAGE_ID, unicode) == "system":
+    LANG = xbmc.getLanguage(xbmc.ISO_639_1,)
+    REGI = xbmc.getLanguage(xbmc.ISO_639_1,1).split("-")[1]
+else:
+    LANG = plugin.get_setting(SETTING_LANGUAGE_ID, unicode)
+    REGI = xbmc.getLanguage(xbmc.ISO_639_1,1).split("-")[1]
 
 TVDB_API = plugin.get_setting(SETTING_TVDB_API, str)
 

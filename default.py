@@ -11,7 +11,7 @@ import time
 import shutil
 import traceback
 import xbmcaddon
-from xbmcswift2 import xbmcplugin, xbmcvfs
+from xbmcswift2 import xbmcplugin, xbmcvfs, xbmc
 from meta import plugin
 from meta.utils.properties import get_property, set_property, clear_property
 from meta.utils.rpc import RPC
@@ -25,10 +25,12 @@ import meta.navigation.movies
 import meta.navigation.tvshows
 import meta.navigation.live
 import meta.navigation.music
+import meta.navigation.musicvideos
 import meta.navigation.lists
 import meta.library.tvshows
 import meta.library.movies
 import meta.library.music
+import meta.library.musicvideos
 import meta.library.live
 from meta.library.tools import channel_inventory, library_inventory
 from language import get_string as _
@@ -39,6 +41,13 @@ FORCE = plugin.get_setting(SETTING_FORCE_VIEW, bool)
 VIEW  = plugin.get_setting(SETTING_MAIN_VIEW, int)
 
 addonid = 'plugin.video.metalliq'
+
+@plugin.route('/testing')
+def testing_audiodb():
+    REGI1 = xbmc.getLanguage(0,)
+    REGI2 = xbmc.getLanguage(1,1)
+    REGI3 = xbmc.getLanguage(2,1)
+    dialogs.notify(msg=REGI2, title=REGI3, delay=5000, image=get_icon_path("metalliq"))
 
 @plugin.route('/')
 def root():
@@ -55,6 +64,12 @@ def root():
             'path': plugin.url_for("tv"),
             'icon': get_icon_path("tv"),
             'thumbnail': get_icon_path("tv"),
+        },
+        {
+            'label': _("Music videos"),
+            'path': plugin.url_for("musicvideos"),
+            'icon': get_icon_path("musicvideos"),
+            'thumbnail': get_icon_path("musicvideos"),
         },
         {
             'label': _("Music"),
@@ -139,7 +154,10 @@ def manage_library_players(type):
             picked_id = IDS[NAMES.index(picked)]
         else:
             picked_id = picked
-        msg2 = '{0} "{1}"{2}'.format(_("Edit"), picked, _("%s to %s").replace("%s", ""))
+        if int(xbmc.getInfoLabel('System.BuildVersion')[:2]) > 17:
+            msg2 = '{0} "{1}"{2}'.format(_("Edit"), picked, _("{0:s} to {1:s}").replace("{0:s}", "").replace("{:s}", ""))
+        else:
+            msg2 = '{0} "{1}"{2}'.format(_("Edit"), picked, _("%s to %s").replace("%s", ""))        
         types = ['{0} [{1}]'.format(name, _("Preferred mode").replace(_("Mode").lower(), _("Player").lower())), 
                  '{0} ({1})'.format(_("Enabled"), len(ENABLED)),
                  '{0} ({1})'.format(_("All"), len(NAMES)),
@@ -175,6 +193,10 @@ def manage_library_players(type):
                 new_name = NAMES[IDS.index(new)]
             else:
                 new_name = new
+            if int(xbmc.getInfoLabel('System.BuildVersion')[:2]) > 17:
+                msg2 = '{0} "{1}"{2}'.format(_("Edit"), picked, _("{0:s} to {1:s}").replace("{0:s}", "").replace("{:s}", ""))
+            else:
+                msg2 = '{0} "{1}"{2}'.format(_("Edit"), picked, _("%s to %s").replace("%s", ""))
             msg5 = '{0} "{1}"[CR]{2} "{3}".[CR]{4}'.format(_("Edit"), picked, _("%s to %s").replace("%s ", "").replace("%s", ""), new_name, _("Are you sure?"))
             if dialogs.yesno('{0} {1} {2}'.format(_("Edit"), _("Library").lower(), _("Player").lower()), msg5):
                 for item in ITEMS:
@@ -357,7 +379,11 @@ def settings_set_default_channeler(media):
     channelers = active_channelers(media)
     channelers.insert(0, ADDON_PICKER)
     media = media.replace('es','e').replace('ws','w').replace('all','').replace('os','o').replace('vs','v s')
-    selection = dialogs.select("{0}".format(_("Select %s") % "{0} {1}".format(_("Default").lower(), _("Player").lower())), [p.title for p in channelers])
+    if int(xbmc.getInfoLabel('System.BuildVersion')[:2]) > 17:
+        header = _("Select {0:s}").format("{0} {1}".format(_("Default").lower(), _("Player").lower()))
+    else:
+        header = _("Select %s") % "{0} {1}".format(_("Default").lower(), _("Player").lower())
+    selection = dialogs.select(header, [p.title for p in channelers])
     if selection >= 0:
         selected = channelers[selection].id
         if media == "movies":
@@ -377,7 +403,11 @@ def settings_set_default_channeler(media):
 def settings_set_default_player(media):
     players = active_players(media)
     players.insert(0, ADDON_SELECTOR)
-    selection = dialogs.select("{0}".format(_("Select %s") % "{0} {1}".format(_("Default").lower(), _("Player").lower())), [p.title for p in players])
+    if int(xbmc.getInfoLabel('System.BuildVersion')[:2]) > 17:
+        header = _("Select {0:s}").format("{0} {1}".format(_("Default").lower(), _("Player").lower()))
+    else:
+        header = _("Select %s") % "{0} {1}".format(_("Default").lower(), _("Player").lower())
+    selection = dialogs.select(header, [p.title for p in players])
     if selection >= 0:
         selected = players[selection].id
         if media == "movies":
@@ -398,7 +428,11 @@ def settings_set_default_player(media):
 def settings_set_default_player_fromlib(media):
     players = active_players(media)
     players.insert(0, ADDON_SELECTOR)
-    selection = dialogs.select("{0}".format(_("Select %s") % "{0} {1}".format(_("Library").lower(), _("Player").lower())), [p.title for p in players])
+    if int(xbmc.getInfoLabel('System.BuildVersion')[:2]) > 17:
+        header = _("Select {0:s}").format("{0} {1}".format(_("Default").lower(), _("Player").lower()))
+    else:
+        header = _("Select %s") % "{0} {1}".format(_("Default").lower(), _("Player").lower())
+    selection = dialogs.select(header, [p.title for p in players])
     if selection >= 0:
         selected = players[selection].id
         if media == "movies":
@@ -419,7 +453,11 @@ def settings_set_default_player_fromlib(media):
 def settings_set_default_player_fromcontext(media):
     players = active_players(media)
     players.insert(0, ADDON_SELECTOR)
-    selection = dialogs.select("{0}".format(_("Select %s") % "{0} {1}".format("context", _("Player").lower())), [p.title for p in players])
+    if int(xbmc.getInfoLabel('System.BuildVersion')[:2]) > 17:
+        header = _("Select {0:s}").format("{0} {1}".format(_("Default").lower(), _("Player").lower()))
+    else:
+        header = _("Select %s") % "{0} {1}".format(_("Default").lower(), _("Player").lower())
+    selection = dialogs.select(header, [p.title for p in players])
     if selection >= 0:
         selected = players[selection].id
         if media == "movies":
@@ -460,6 +498,9 @@ def silent_setup():
     tvlibraryfolder = plugin.get_setting(SETTING_TV_LIBRARY_FOLDER, unicode)
     try: meta.library.tvshows.auto_tvshows_setup(tvlibraryfolder)
     except: pass
+    musicvideoslibraryfolder = plugin.get_setting(SETTING_MUSICVIDEOS_LIBRARY_FOLDER, unicode)
+    try: meta.library.musicvideos.auto_musicvideos_setup(musicvideoslibraryfolder)
+    except: pass
     musiclibraryfolder = plugin.get_setting(SETTING_MUSIC_LIBRARY_FOLDER, unicode)
     try: meta.library.music.auto_music_setup(musiclibraryfolder)
     except: pass
@@ -490,6 +531,11 @@ def sources_setup():
         meta.library.tvshows.auto_tvshows_setup(tvlibraryfolder)
         dialogs.notify(msg="{0}: {1} {2}".format(_('TV shows'), _('Configure'), _("Library").lower()), title=_('Done'), delay=1000, image=get_icon_path("tv"))
     except: dialogs.notify(msg="{0}: {1} {2}".format(_("TV shows"), _('Configure'), _("Library").lower()), title=_('Failed for %s') % _('TV shows'), delay=1000, image=get_icon_path("tv"))
+    musicvideoslibraryfolder = plugin.get_setting(SETTING_MUSICVIDEOS_LIBRARY_FOLDER, unicode)
+    try:
+        meta.library.musicvideos.auto_musicvideos_setup(musicvideoslibraryfolder)
+        dialogs.notify(msg="{0}: {1} {2}".format(_('Music videos'), _('Configure'), _("Library").lower()), title=_('Done'), delay=1000, image=get_icon_path("musicvideos"))
+    except: dialogs.notify(msg="{0}: {1} {2}".format(_("Music videos"), _('Configure'), _("Library").lower()), title=_('Failed for %s') % _('Music videos'), delay=1000, image=get_icon_path("musicvideos"))
     musiclibraryfolder = plugin.get_setting(SETTING_MUSIC_LIBRARY_FOLDER, unicode)
     try:
         meta.library.music.auto_music_setup(musiclibraryfolder)

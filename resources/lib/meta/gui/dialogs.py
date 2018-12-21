@@ -28,7 +28,10 @@ def multiselect(title, items):
     return xbmcgui.Dialog().multiselect(title, items)
 
 def notify(msg, title, delay, image, sound=False):
-    return xbmcgui.Dialog().notification(heading=title, message=msg, time=delay, icon=image, sound=False)
+    if xbmc.getInfoLabel('Window.Property(xmlfile)') != "VideoFullScreen.xml":
+        return xbmcgui.Dialog().notification(heading=title, message=msg, time=delay, icon=image, sound=sound)
+    else:
+        pass
 
 def select_ext(title, populator, tasks_count):
     addonPath = xbmcaddon.Addon().getAddonInfo('path').decode('utf-8')
@@ -179,9 +182,13 @@ class SelectorDialog(xbmcgui.WindowXMLDialog):
                 if len(links) > 1:
                     source += " > {0}".format(_("Found %i items") % len(links))
                 listitem = xbmcgui.ListItem(source)
+                xbmc.log('QQQQQQ listitem = []'.format(listitem), xbmc.LOGNOTICE)
                 try:
                     if "plugin://" in links[0]['path']: icon = xbmcaddon.Addon(id=links[0]['path'].split("/")[2]).getAddonInfo('icon')
                     else: icon = xbmc.translatePath("{0}/folder.jpg".format(links[0]['path'].rsplit("/",2)[0]))
+                    xbmc.log("QQQQQQ icon1 = {}".format(icon), xbmc.LOGNOTICE)
+                    if icon == "": icon = xbmc.getInfoLabel('ListItem.Art(poster)')
+                    xbmc.log("QQQQQQ icon2 = {}".format(icon), xbmc.LOGNOTICE)
                     listitem.setIconImage(icon)
                     listitem.setThumbnailImage(icon)
                 except: pass

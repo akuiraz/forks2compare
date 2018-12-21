@@ -62,14 +62,18 @@ def play_episode(id, season, episode, mode):
         if episode_parameters is not None:
             params[lang] = episode_parameters
         else:
+            if int(xbmc.getInfoLabel('System.BuildVersion')[:2]) > 17:
+                title = _("{0:s} not found").format(_("Episode information"))
+            else:
+                title = _("%s not found") % _("Episode information")
             if trakt_ids["tmdb"] != None and trakt_ids["tmdb"] != "":
                 return tmdb_play_episode(trakt_ids["tmdb"], season, episode, mode)
             elif trakt_ids["tvdb"] == None or trakt_ids["tvdb"] == "":
                 msg = "{0} {1} - S{2}E{3}".format(_("No TVDb information found for"), show_info['name'], season, episode)
-                return dialogs.ok(_("%s not found") % _("Episode information"), msg)
+                return dialogs.ok(title, msg)
             else:
                 msg = "{0} {1} - S{2}E{3}".format(_("No TVDb or TMDb information found for"), show_info['name'], season, episode)
-                return dialogs.ok(_("%s not found") % _("Episode information"), msg)
+                return dialogs.ok(title % _("Episode information"), msg)
         if trakt_ids != None: params[lang].update(trakt_ids)
         params[lang]['info'] = show_info
         params[lang] = to_unicode(params[lang])
@@ -131,8 +135,12 @@ def play_episode_from_guide(id, season, episode, mode):
         if episode_parameters is not None:
             params[lang] = episode_parameters
         else:
+            if int(xbmc.getInfoLabel('System.BuildVersion')[:2]) > 17:
+                title = _("{0:s} not found").format(_("Episode information"))
+            else:
+                title = _("%s not found") % _("Episode information")
             msg = "{0} {1} - S{1}E{2}".format(_("No tvdb information found for"), show['seriesname'], season, episode)
-            dialogs.ok(_("%s not found") % _("Episode information"), msg)
+            dialogs.ok(title, msg)
             return
         if trakt_ids != None:
             params[lang].update(trakt_ids)
@@ -206,8 +214,12 @@ def tmdb_play_episode(id, season, episode, mode):
             if trakt_ids["trakt"] != None and trakt_ids["trakt"] != "":
                 return trakt_play_episode(trakt_ids["trakt"], season, episode, mode)
             else:
+                if int(xbmc.getInfoLabel('System.BuildVersion')[:2]) > 17:
+                    title = _("{0:s} not found").format(_("Episode information"))
+                else:
+                    title = _("%s not found") % _("Episode information")
                 msg = "{0} {1} - S{2}E{3}".format(_("No TMDb information found for"), show_info['name'], season, episode)
-                dialogs.ok(_("%s not found") % _("Episode information"), msg)
+                dialogs.ok(title, msg)
                 return
         if trakt_ids != None: params[lang].update(trakt_ids)
         params[lang]['info'] = show_info
@@ -282,16 +294,20 @@ def trakt_play_episode(id, season, episode, mode):
         episode_parameters = get_trakt_episode_parameters(show, preason, prepisode)
         if episode_parameters is not None: params[lang] = episode_parameters
         else:
+            if int(xbmc.getInfoLabel('System.BuildVersion')[:2]) > 17:
+                title = _("{0:s} not found").format(_("Episode information"))
+            else:
+                title = _("%s not found") % _("Episode information")
             if trakt_ids["tmdb"] != None and trakt_ids["tmdb"] != "" and tried != "tmdb": 
                 tried = "tmdb"
                 return tvdb_play_episode(trakt_ids["tvdb"], season, episode, mode)
             elif tried == "tmdb":
                 msg = "{0} {1} - S{2}E{3}".format(_("No TVDb or TMDb information found for"), show_info['name'], season, episode)
-                dialogs.ok(_("%s not found") % _("Episode information"), msg)
+                dialogs.ok(title, msg)
                 return
             else:
                 msg = "{0} {1} - S{2}E{3}".format(_("No TMDb information found for"), show_info['name'], season, episode)
-                dialogs.ok(_("%s not found") % _("Episode information"), msg)
+                dialogs.ok(title, msg)
                 return
         if trakt_ids != None: params[lang].update(trakt_ids)
         params[lang]['info'] = show_info
@@ -372,6 +388,10 @@ def tvmaze_play_episode(id, season, episode, mode, title=None):
         episode_parameters = get_tvmaze_episode_parameters(show, preason, prepisode)
         if episode_parameters is not None: params[lang] = episode_parameters
         else:
+            if int(xbmc.getInfoLabel('System.BuildVersion')[:2]) > 17:
+                title = _("{0:s} not found").format(_("Episode information"))
+            else:
+                title = _("%s not found") % _("Episode information")
             if trakt_ids["tmdb"] != None and trakt_ids["tmdb"] != "" and tried != "tmdb": 
                 tried = "tmdb"
                 return tvdb_play_episode(trakt_ids["tvdb"], season, episode, mode)
@@ -472,10 +492,10 @@ def get_episode_parameters(show, season, episode):
     if episode_obj.get('filename') != "": parameters['thumbnail'] = tvdb_base + str(episode_obj.get('filename'))
     elif show.get('poster') != "": parameters['thumbnail'] = tvdb_base + show.get('poster')
     else: parameters['thumbnail'] = get_icon("metalliq")
-    if show.get('poster') != "": parameters['poster'] = tvdb_base + show.get('poster')
-    else: parameters['poster'] = get_icon("metalliq")
+    if show.get('poster') != "" and show.get('poster') is not None: parameters['poster'] = tvdb_base + show.get('poster')
+    else: parameters['poster'] = get_icon_path("metalliq")
     parameters['thumbnail'] = "http://thetvdb.com/banners/episodes/" + str(show['id']) + "/" + str(parameters['epid']) + ".jpg"
-    if show.get('banner') != "": parameters['banner'] = tvdb_base + show.get('banner')
+    if show.get('banner') != "" and show.get('banner') is not None: parameters['banner'] = tvdb_base + show.get('banner')
     else: parameters['banner'] = get_banner_path()
     if show.get('fanart') != None and show.get('fanart') != "": parameters['fanart'] = tvdb_base + show.get('fanart')
     else: parameters['fanart'] = get_background_path()

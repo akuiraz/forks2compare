@@ -109,17 +109,21 @@ def patch(mode):
         if AUTOS != [[], [], [], []]:
             ADDONS = AUTOS
         else:
-            if dialogs.yesno('{0}: Patch'.format(plugin.name), '{0}.[CR]{1} & {2}'.format(_("%s not found") % 'Auto-patches', _("Enable"), _("Continue?"))): return patch("all")
+            if int(xbmc.getInfoLabel('System.BuildVersion')[:2]) > 17:
+                message = _("{0:s} not found").format('Auto-patches')
+            else:
+                message = _("%s not found") % 'Auto-patches'
+            if dialogs.yesno('{0}: Patch'.format(plugin.name), '{0}.[CR]{1} & {2}'.format(message, _("Enable"), _("Continue?"))): return patch("all")
             else:
                 plugin.set_setting(SETTING_AUTOPATCH, "false")
                 return
     else:
-        ADDONS = [[], [i for i in INSTALLED if i.startswith("plugin.video.") and xbmcvfs.exists("{0}{1}/{2}".format(adir, i, PATCHES[1][0]))], [i for i in INSTALLED if i.startswith("plugin.video.") and xbmcvfs.exists("{0}{1}/{2}".format(adir, i, PATCHES[2][0]))], [i for i in INSTALLED if i.startswith("script.module.") and xbmcvfs.exists("{0}{1}/{2}".format(adir, i, PATCHES[3][0]))]]
+        ADDONS = [[], [i for i in INSTALLED if (i.startswith("plugin.video.") and xbmcvfs.exists("{0}{1}/{2}".format(adir, i, PATCHES[1][0]))) or (i.startswith("script.module.") and xbmcvfs.exists("{0}{1}/lib/{2}".format(adir, i, PATCHES[1][0])))], [i for i in INSTALLED if i.startswith("plugin.video.") and xbmcvfs.exists("{0}{1}/{2}".format(adir, i, PATCHES[2][0]))], [i for i in INSTALLED if i.startswith("script.module.") and xbmcvfs.exists("{0}{1}/{2}".format(adir, i, PATCHES[3][0]))]]
     count = 0
     for i in range(1, len(ADDONS)):
         for a in ADDONS[i]:
             count = count + 1
-            b = "{0}{1}/{2}".format(adir, a, PATCHES[i][0])
+            b = "{0}{1}/{2}".format(adir, a, PATCHES[i][0]) if xbmcvfs.exists("{0}{1}/{2}".format(adir, a, PATCHES[i][0])) else "{0}{1}/lib/{2}".format(adir, a, PATCHES[i][0])
             c = xbmcvfs.File(b)
             d = c.read()
             c.close()

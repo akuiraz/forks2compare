@@ -146,7 +146,7 @@ def get_episode_from_library(imdbnumber, season, episode):
             return {'label': ep['title'], 'path': ep['file']}
     return None
 
-def add_source(source_name, source_path, source_content, source_thumbnail):    
+def add_source(source_name, source_path, source_content, source_thumbnail, type='video'):
     xml_file = xbmc.translatePath('special://profile/sources.xml')
     if not os.path.exists(xml_file):
         with open(xml_file, "w") as f:
@@ -167,17 +167,17 @@ def add_source(source_name, source_path, source_content, source_thumbnail):
         <default pathversion="1" />
     </files>
 </sources>""")
-    existing_source = _get_source_attr(xml_file, source_name, "path")
-    if existing_source and existing_source != source_path:
+    existing_source = _get_source_attr(xml_file, source_name, "path", type=type)
+    if existing_source and existing_source != source_path and source_content != "":
         _remove_source_content(existing_source)
-    if _add_source_xml(xml_file, source_name, source_path, source_thumbnail):
+    if _add_source_xml(xml_file, source_name, source_path, source_thumbnail, type=type) and source_content != "":
         _set_source_content(source_content)
 #########   XML functions   #########
 
-def _add_source_xml(xml_file, name, path, thumbnail):
+def _add_source_xml(xml_file, name, path, thumbnail, type='video'):
     tree = ET.parse(xml_file)
     root = tree.getroot()
-    sources = root.find('video')
+    sources = root.find(type)
     existing_source = None
     for source in sources.findall('source'):
         xml_name = source.find("name").text
@@ -234,10 +234,10 @@ def _indent_xml(elem, level=0):
         if level and (not elem.tail or not elem.tail.strip()):
             elem.tail = i
 
-def _get_source_attr(xml_file, name, attr):
+def _get_source_attr(xml_file, name, attr, type='video'):
     tree = ET.parse(xml_file)
     root = tree.getroot()
-    sources = root.find('video')
+    sources = root.find(type)
     for source in sources.findall('source'):
         xml_name = source.find("name").text
         if xml_name == name:
@@ -272,7 +272,7 @@ def _remove_source_content(path):
     q = "DELETE FROM path WHERE strPath LIKE '%{0}%'".format(path)
     return _db_execute("MyVideos*.db", q)
 
-def _set_source_content(content):    
+def _set_source_content(content):
     q = "INSERT OR REPLACE INTO path (strPath,strContent,strScraper,strHash,scanRecursive,useFolderNames,strSettings,noUpdate,exclude,dateAdded,idParentPath) VALUES "
     q += content
     return _db_execute("MyVideos*.db", q)

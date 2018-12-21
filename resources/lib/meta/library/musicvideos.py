@@ -12,23 +12,23 @@ from meta.navigation.base import get_icon_path, get_background_path
 from lastfm import lastfm
 
 from language import get_string as _
-from settings import SETTING_MUSIC_LIBRARY_FOLDER, SETTING_MUSIC_PLAYLIST_FOLDER
+from settings import SETTING_MUSICVIDEOS_LIBRARY_FOLDER, SETTING_MUSICVIDEOS_PLAYLIST_FOLDER
 
 import re
 
 def update_library():
     # setup library folder
-    library_folder = plugin.get_setting(SETTING_MUSIC_LIBRARY_FOLDER, unicode)
+    library_folder = plugin.get_setting(SETTING_MUSICVIDEOS_LIBRARY_FOLDER, unicode)
     if not xbmcvfs.exists(library_folder):
         return
-    scan_library(type="music")
+    scan_library(type="video")
     #scan_library(type="video")
 
-def add_music_to_library(library_folder, artist_name, album_name, track_name):
+def add_musicvideos_to_library(library_folder, artist_name, album_name, track_name):
     # replace non valid path characters with _
-    safe_artist_name = to_utf8(re.sub("[\\\\<>:\"|?*/]", "_", artist_name))
-    safe_album_name = to_utf8(re.sub("[\\\\<>:\"|?*/]", "_", album_name))
-    safe_track_name = to_utf8(re.sub("[\\\\<>:\"|?*/]", "_", track_name))
+    safe_artist_name = to_utf8(re.sub("[^\w\-_\. '()]", "_", artist_name))
+    safe_album_name = to_utf8(re.sub("[^\w\-_\. '()]", "_", album_name))
+    safe_track_name = to_utf8(re.sub("[^\w\-_\. '()]", "_", track_name))
 
     changed = False
     artist_info = lastfm.get_artist_info(artist_name)
@@ -43,17 +43,9 @@ def add_music_to_library(library_folder, artist_name, album_name, track_name):
     nfo_artist_path = os.path.join(artist_folder, "artist.nfo")
     nfo_album_path = os.path.join(album_folder, "album.nfo")
     track_info = lastfm.get_track_info(artist_name, track_name)
-    track_number = ""
-    if "album" in track_info:
-        try:
-            track_number = track_info["album"]["@attr"]["position"]
-        except:
-            track_number = ""
-            xbmc.log('QQQQQ track info = {}'.format(track_info), xbmc.LOGNOTICE)
-        if track_number != "" and track_number != None: full_track_name = track_number + ". " + safe_track_name
-        else: full_track_name = safe_track_name
-    else: full_track_name = safe_track_name
+    full_track_name = safe_artist_name + " - " + safe_track_name
     nfo_track_path = os.path.join(album_folder, full_track_name + ".nfo")
+
     if not xbmcvfs.exists(nfo_artist_path):
         changed = True
         image = artist_info["image"][-1]["#text"]
@@ -77,38 +69,15 @@ def add_music_to_library(library_folder, artist_name, album_name, track_name):
         nfo_file.write(content)
         nfo_file.close()
 
-    if not xbmcvfs.exists(nfo_track_path):
-        changed = True
-        track_info = lastfm.get_track_info(artist_name, track_name)
-        track_number = ""
-        if "album" in track_info:
-            try:
-                track_number = track_info["album"]["@attr"]["position"]
-            except:
-                track_number = ""
-        else:
-            track_number = ""
-        nfo_file = xbmcvfs.File(nfo_track_path, 'w')
-        content = "<song>\n" \
-                  "  <title>{0}</title>\n" \
-                  "  <artist>{1}</artist>\n" \
-                  "  <album>{2}</album>\n" \
-                  "  <track>{3}</track>\n" \
-                  "</song>".format(to_utf8(track_name),
-                                         artist_name,
-                                         album_name,
-                                         track_number)
-        nfo_file.write(content)
-        nfo_file.close()
-
     # create strm file
     strm_filepath = os.path.join(album_folder, full_track_name + ".strm")
     if not xbmcvfs.exists(strm_filepath):
         changed = True
         track_info = lastfm.get_track_info(artist_name, track_name)
-        strm_filepath = os.path.join(album_folder, full_track_name + ".strm")
+        if "album" in track_info:
+            strm_filepath = os.path.join(album_folder, full_track_name + ".strm")
         strm_file = xbmcvfs.File(strm_filepath, 'w')
-        content = plugin.url_for("music_play", artist_name=artist_name, track_name=track_name,
+        content = plugin.url_for("musicvideos_play", artist_name=artist_name, track_name=track_name,
                                  album_name=album_name, mode='library')
         strm_file.write(content)
         strm_file.close()
@@ -140,35 +109,35 @@ def add_music_to_library(library_folder, artist_name, album_name, track_name):
 def setup_library(library_folder):
     if library_folder[-1] != "/" and library_folder[-1] != "\\":
         library_folder += "/"
-    playlist_folder = plugin.get_setting(SETTING_MUSIC_PLAYLIST_FOLDER, unicode)
-    if plugin.get_setting(SETTING_MUSIC_PLAYLIST_FOLDER, unicode)[-1] != "/": playlist_folder += "/"
+    playlist_folder = plugin.get_setting(SETTING_MUSICVIDEOS_PLAYLIST_FOLDER, unicode)
+    if plugin.get_setting(SETTING_MUSICVIDEOS_PLAYLIST_FOLDER, unicode)[-1] != "/": playlist_folder += "/"
     # create folders
     if not xbmcvfs.exists(playlist_folder): xbmcvfs.mkdir(playlist_folder)
     if not xbmcvfs.exists(library_folder):
         # create folder
         xbmcvfs.mkdir(library_folder)
-        msg = _("Would you like to automatically set MetalliQ as a music source?")
+        msg = _("Would you like to automatically set MetalliQ as a musicvideos source?")
         if dialogs.yesno("{0} {1}".format(_("Library"), "setup"), msg):
-            source_thumbnail = get_icon_path("music")
-            source_name = "MetalliQ "  + _("Music")
-            source_content = "('{0}','music','','',2147483647,0,'',0,0,NULL,NULL)".format(library_folder)
-            add_source(source_name, library_folder, source_content, source_thumbnail, type='music')
+            source_thumbnail = get_icon_path("musicvideos")
+            source_name = "MetalliQ "  + _("Music videos")
+            source_content = "('{0}','musicvideos','metadata.musicvideos.theaudiodb.com','',2147483647,0,'<settings><setting id=\"fanarttvalbumthumbs\" value=\"true\" /><setting id=\"tadbalbumthumbs\" value=\"true\" /></settings>',0,0,NULL,NULL)".format(library_folder)
+            add_source(source_name, library_folder, source_content, source_thumbnail)
     # return translated path
     return xbmc.translatePath(library_folder)
 
-def auto_music_setup(library_folder):
+def auto_musicvideos_setup(library_folder):
     if library_folder[-1] != "/" and library_folder[-1] != "\\":
         library_folder += "/"
-    playlist_folder = plugin.get_setting(SETTING_MUSIC_PLAYLIST_FOLDER, unicode)
-    if plugin.get_setting(SETTING_MUSIC_PLAYLIST_FOLDER, unicode)[-1] != "/": playlist_folder += "/"
+    playlist_folder = plugin.get_setting(SETTING_MUSICVIDEOS_PLAYLIST_FOLDER, unicode)
+    if plugin.get_setting(SETTING_MUSICVIDEOS_PLAYLIST_FOLDER, unicode)[-1] != "/": playlist_folder += "/"
     if not xbmcvfs.exists(playlist_folder): xbmcvfs.mkdir(playlist_folder)
     if not xbmcvfs.exists(library_folder):
         try:
             xbmcvfs.mkdir(library_folder)
-            source_thumbnail = get_icon_path("music")
-            source_name = "MetalliQ "  + _("Music")
-            source_content = "('{0}','music','','',2147483647,0,'',0,0,NULL,NULL)".format(library_folder)
-            add_source(source_name, library_folder, source_content, source_thumbnail, type='music')
+            source_thumbnail = get_icon_path("musicvideos")
+            source_name = "MetalliQ "  + _("Music videos")
+            source_content = "('{0}','musicvideos','metadata.musicvideos.theaudiodb.com','',2147483647,0,'<settings><setting id=\"fanarttvalbumthumbs\" value=\"true\" /><setting id=\"tadbalbumthumbs\" value=\"true\" /></settings>',0,0,NULL,NULL)".format(library_folder)
+            add_source(source_name, library_folder, source_content, source_thumbnail)
             return True
         except:
             False

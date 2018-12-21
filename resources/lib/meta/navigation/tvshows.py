@@ -333,7 +333,11 @@ def trakt_tv_played_to_library(page, confirm, uncached=False):
         page = int(page)
         pages = [page]
     except: pages = page_redux(page)
-    if confirm == "no" or dialogs.yesno(_("Scan item to library"), "{0}[CR]{1}[CR]{2}".format(_("Library"), _("Add %s") % ("'{0} ({1}) {2} {3}'".format("Most played", "Trakt", _("page"), ','.join([str(i) for i in pages]))),_("Are you sure?"))):
+    if int(xbmc.getInfoLabel('System.BuildVersion')[:2]) > 17:
+        add = _("Add %s").format("'{0} ({1}) {2} {3}'".format("Most played", "Trakt", _("page"), ','.join([str(i) for i in pages])))
+    else:
+        add = _("Add %s") % ("'{0} ({1}) {2} {3}'".format("Most played", "Trakt", _("page"), ','.join([str(i) for i in pages])))
+    if confirm == "no" or dialogs.yesno(_("Scan item to library"), "{0}[CR]{1}[CR]{2}".format(_("Library"), add,_("Are you sure?"))):
         items = {}
         tv = []
         for i in pages: tv = tv + [m for m in trakt_tv_played(i, True) if m not in tv]
@@ -370,7 +374,11 @@ def trakt_tv_watched_to_library(page, confirm, uncached=False):
         page = int(page)
         pages = [page]
     except: pages = page_redux(page)
-    if confirm == "no" or dialogs.yesno(_("Scan item to library"), "{0}[CR]{1}[CR]{2}".format(_("Library"), _("Add %s") % ("'{0} ({1}) {2} {3}'".format("Most watched", "Trakt", _("page"), ','.join([str(i) for i in pages]))),_("Are you sure?"))):
+    if int(xbmc.getInfoLabel('System.BuildVersion')[:2]) > 17:
+        add = _("Add %s").format("'{0} ({1}) {2} {3}'".format("Most watched", "Trakt", _("page"), ','.join([str(i) for i in pages])))
+    else:
+        add = _("Add %s") % ("'{0} ({1}) {2} {3}'".format("Most watched", "Trakt", _("page"), ','.join([str(i) for i in pages])))
+    if confirm == "no" or dialogs.yesno(_("Scan item to library"), "{0}[CR]{1}[CR]{2}".format(_("Library"), add,_("Are you sure?"))):
         items = {}
         tv = []
         for i in pages: tv = tv + [m for m in trakt_tv_watched(i, True) if m not in tv]
@@ -407,7 +415,11 @@ def trakt_tv_collected_to_library(page, confirm, uncached=False):
         page = int(page)
         pages = [page]
     except: pages = page_redux(page)
-    if confirm == "no" or dialogs.yesno(_("Scan item to library"), "{0}[CR]{1}[CR]{2}".format(_("Library"), _("Add %s") % ("'{0} ({1}) {2} {3}'".format("Most collected", "Trakt", _("page"), ','.join([str(i) for i in pages]))),_("Are you sure?"))):
+    if int(xbmc.getInfoLabel('System.BuildVersion')[:2]) > 17:
+        add = _("Add %s").format("'{0} ({1}) {2} {3}'".format("Most collected", "Trakt", _("page"), ','.join([str(i) for i in pages])))
+    else:
+        add = _("Add %s") % ("'{0} ({1}) {2} {3}'".format("Most collected", "Trakt", _("page"), ','.join([str(i) for i in pages])))
+    if confirm == "no" or dialogs.yesno(_("Scan item to library"), "{0}[CR]{1}[CR]{2}".format(_("Library"), add,_("Are you sure?"))):
         items = {}
         tv = []
         for i in pages: tv = tv + [m for m in trakt_tv_collected(i, True) if m not in tv]
@@ -444,6 +456,10 @@ def trakt_tv_popular_to_library(page, confirm, uncached=False):
         page = int(page)
         pages = [page]
     except: pages = page_redux(page)
+    if int(xbmc.getInfoLabel('System.BuildVersion')[:2]) > 17:
+        add = _("Add %s").format("'{0} ({1}) {2} {3}'".format("Popular", "Trakt", _("page"), ','.join([str(i) for i in pages])))
+    else:
+        add = _("Add %s") % ("'{0} ({1}) {2} {3}'".format("Popular", "Trakt", _("page"), ','.join([str(i) for i in pages])))
     if confirm == "no" or dialogs.yesno(_("Scan item to library"), "{0}[CR]{1}[CR]{2}".format(_("Library"), _("Add %s") % ("'{0} ({1}) {2} {3}'".format("Popular", "Trakt", _("page"), ','.join([str(i) for i in pages]))),_("Are you sure?"))):
         items = {}
         tv = []
@@ -480,7 +496,11 @@ def trakt_tv_trending_to_library(page, confirm, uncached=False):
         page = int(page)
         pages = [page]
     except: pages = page_redux(page)
-    if confirm == "no" or dialogs.yesno(_("Scan item to library"), "{0}[CR]{1}[CR]{2}".format(_("Library"), _("Add %s") % ("'{0} ({1}) {2} {3}'".format("Trending", "Trakt", _("page"), ','.join([str(i) for i in pages]))),_("Are you sure?"))):
+    if int(xbmc.getInfoLabel('System.BuildVersion')[:2]) > 17:
+        add = _("Add %s").format("'{0} ({1}) {2} {3}'".format("Trending", "Trakt", _("page"), ','.join([str(i) for i in pages])))
+    else:
+        add = _("Add %s") % ("'{0} ({1}) {2} {3}'".format("Trending", "Trakt", _("page"), ','.join([str(i) for i in pages])))
+    if confirm == "no" or dialogs.yesno(_("Scan item to library"), "{0}[CR]{1}[CR]{2}".format(_("Library"), add,_("Are you sure?"))):
         items = {}
         tv = []
         for i in pages: tv = tv + [m for m in trakt_tv_trending(i, True) if m not in tv]
@@ -647,7 +667,11 @@ def tmdb_tv_genre_to_library(id, page, confirm):
         page = int(page)
         pages = [page]
     except: pages = page_redux(page)
-    if confirm == "no" or dialogs.yesno(_("Scan item to library"), "{0}[CR]{1}[CR]{2}".format(_("Library"), _("Add %s") % ("'{0} ({1}) {2} {3}'".format(name, "TMDb", _("page"), ','.join([str(i) for i in pages]))),_("Are you sure?"))):
+    if int(xbmc.getInfoLabel('System.BuildVersion')[:2]) > 17:
+        add = _("Add %s").format("'{0} ({1}) {2} {3}'".format(name, "TMDb", _("page"), ','.join([str(i) for i in pages])))
+    else:
+        add = _("Add %s") % ("'{0} ({1}) {2} {3}'".format(name, "TMDb", _("page"), ','.join([str(i) for i in pages])))
+    if confirm == "no" or dialogs.yesno(_("Scan item to library"), "{0}[CR]{1}[CR]{2}".format(_("Library"), add,_("Are you sure?"))):
         items = {}
         tv = []
         for g in genres:
@@ -670,7 +694,11 @@ def tmdb_tv_now_playing_to_library(page, confirm):
         page = int(page)
         pages = [page]
     except: pages = page_redux(page)
-    if confirm == "no" or dialogs.yesno(_("Scan item to library"), "{0}[CR]{1}[CR]{2}".format(_("Library"), _("Add %s") % ("'{0} ({1}) {2} {3}'".format("On the air", "TMDb", _("page"), ','.join([str(i) for i in pages]))),_("Are you sure?"))):
+    if int(xbmc.getInfoLabel('System.BuildVersion')[:2]) > 17:
+        add = _("Add %s").format("'{0} ({1}) {2} {3}'".format("On the air", "TMDb", _("page"), ','.join([str(i) for i in pages])))
+    else:
+        add = _("Add %s") % ("'{0} ({1}) {2} {3}'".format("On the air", "TMDb", _("page"), ','.join([str(i) for i in pages])))
+    if confirm == "no" or dialogs.yesno(_("Scan item to library"), "{0}[CR]{1}[CR]{2}".format(_("Library"), add,_("Are you sure?"))):
         items = {}
         tv = []
         for i in pages: tv = tv + [m for m in tmdb_tv_now_playing(i, True)["results"] if m not in tv]
@@ -692,7 +720,11 @@ def tmdb_tv_most_popular_to_library(page, confirm):
         page = int(page)
         pages = [page]
     except: pages = page_redux(page)
-    if confirm == "no" or dialogs.yesno(_("Scan item to library"), "{0}[CR]{1}[CR]{2}".format(_("Library"), _("Add %s") % ("'{0} ({1}) {2} {3}'".format("Popular", "TMDb", _("page"), ','.join([str(i) for i in pages]))),_("Are you sure?"))):
+    if int(xbmc.getInfoLabel('System.BuildVersion')[:2]) > 17:
+        add = _("Add %s").format("'{0} ({1}) {2} {3}'".format("Popular", "TMDb", _("page"), ','.join([str(i) for i in pages])))
+    else:
+        add = _("Add %s") % ("'{0} ({1}) {2} {3}'".format("Popular", "TMDb", _("page"), ','.join([str(i) for i in pages])))
+    if confirm == "no" or dialogs.yesno(_("Scan item to library"), "{0}[CR]{1}[CR]{2}".format(_("Library"), add, _("Are you sure?"))):
         items = {}
         tv = []
         for i in pages: tv = tv + [m for m in tmdb_tv_most_popular(i, True)["results"] if m not in tv]
@@ -714,6 +746,10 @@ def tmdb_tv_top_rated_to_library(page, confirm):
         page = int(page)
         pages = [page]
     except: pages = page_redux(page)
+    if int(xbmc.getInfoLabel('System.BuildVersion')[:2]) > 17:
+        add = _("Add %s").format("'{0} ({1}) {2} {3}'".format("Top rated", "TMDb", _("page"), ','.join([str(i) for i in pages])))
+    else:
+        add = _("Add %s") % ("'{0} ({1}) {2} {3}'".format("Top rated", "TMDb", _("page"), ','.join([str(i) for i in pages])))
     if confirm == "no" or dialogs.yesno(_("Scan item to library"), "{0}[CR]{1}[CR]{2}".format(_("Library"), _("Add %s") % ("'{0} ({1}) {2} {3}'".format("Top rated", "TMDb", _("page"), ','.join([str(i) for i in pages]))),_("Are you sure?"))):
         items = {}
         tv = []
@@ -807,7 +843,11 @@ def get_tvdb_id_from_name(name, lang):
     import_tvdb()
     search_results = tvdb.search(name, language=lang)
     if not search_results:
-        dialogs.ok(_("%s not found") % _("TV show"), "{0} {1} in tvdb".format(_("no show information found for"), to_utf8(name)))
+        if int(xbmc.getInfoLabel('System.BuildVersion')[:2]) > 17:
+           header = _("{0:s} not found").format(_("TV show"))
+        else:
+            header = _("%s not found") % _("TV show")
+        dialogs.ok(header, "{0} {1} in tvdb".format(_("no show information found for"), to_utf8(name)))
         return
     items = []
     for show in search_results:
@@ -828,28 +868,44 @@ def get_tvdb_id_from_imdb_id(imdb_id):
     import_tvdb()
     tvdb_id = tvdb.search_by_imdb(imdb_id)
     if not tvdb_id:
-        dialogs.ok(_("%s not found") % _("TV show"), "{0} {1} in tvdb".format(_("no show information found for"), imdb_id))
+        if int(xbmc.getInfoLabel('System.BuildVersion')[:2]) > 17:
+           header = _("{0:s} not found").format(_("TV show"))
+        else:
+            header = _("%s not found") % _("TV show")
+        dialogs.ok(header, "{0} {1} in tvdb".format(_("no show information found for"), imdb_id))
         return
     return tvdb_id
 
 @plugin.route('/tv/trakt/personal/collection_to_library')
 def trakt_tv_collection_to_library(preaprove=False, uncached=False):
     from trakt import trakt
-    if preaprove or dialogs.yesno(_("Scan item to library"), "{0}[CR]{1}".format(_("Add %s") % ("'{0} {1} {2}'".format("Trakt", _("TV"), _("Collection").lower())),_("Are you sure?"))):
+    if int(xbmc.getInfoLabel('System.BuildVersion')[:2]) > 17:
+        add = _("Add {0:s}").format("'{0} {1} {2}'".format("Trakt", _("TV"), _("Collection").lower()))
+    else:
+        add = _("Add %s") % ("'{0} {1} {2}'".format("Trakt", _("TV"), _("Collection").lower()))
+    if preaprove or dialogs.yesno(_("Scan item to library"), "{0}[CR]{1}".format(add,_("Are you sure?"))):
         if uncached: tv_add_all_to_library(trakt.trakt_get_collection_uncached("shows"), True)
         else: tv_add_all_to_library(trakt.trakt_get_collection("shows"))
 
 @plugin.route('/tv/trakt/personal/watchlist_to_library')
 def trakt_tv_watchlist_to_library(preaprove=False, uncached=False):
     from trakt import trakt
-    if preaprove or dialogs.yesno(_("Scan item to library"), "{0}[CR]{1}".format(_("Add %s") % ("'{0} {1} {2}'".format("Trakt", _("TV"), _("Watchlist").lower())),_("Are you sure?"))):
+    if int(xbmc.getInfoLabel('System.BuildVersion')[:2]) > 17:
+        add = _("Add {0:s}").format("'{0} {1} {2}'".format("Trakt", _("TV"), _("Watchlist").lower()))
+    else:
+        add = _("Add %s") % ("'{0} {1} {2}'".format("Trakt", _("TV"), _("Watchlist").lower()))
+    if preaprove or dialogs.yesno(_("Scan item to library"), "{0}[CR]{1}".format(add,_("Are you sure?"))):
         if uncached: tv_add_all_to_library(trakt.trakt_get_watchlist_uncached("shows"), True)
         else: tv_add_all_to_library(trakt.trakt_get_watchlist("shows"))
 
 @plugin.route('/tv/trakt/personal/recommendations_to_library')
-def trakt_tv_recommendations_to_library():
+def trakt_tv_recommendations_to_library(preaprove=False):
     from trakt import trakt
-    if dialogs.yesno(_("Scan item to library"), "{0}[CR]{1}".format(_("Add %s") % ("'{0} {1} {2}'".format("Trakt", _("TV"), _("Recommendations").lower())),_("Are you sure?"))):
+    if int(xbmc.getInfoLabel('System.BuildVersion')[:2]) > 17:
+        add = _("Add {0:s}").format("'{0} {1} {2}'".format("Trakt", _("TV"), _("Recommendations").lower()))
+    else:
+        add = _("Add %s") % ("'{0} {1} {2}'".format("Trakt", _("TV"), _("Recommendations").lower()))
+    if preaprove or dialogs.yesno(_("Scan item to library"), "{0}[CR]{1}".format(add,_("Are you sure?"))):
         if uncached: tv_add_all_to_library(trakt.get_recommendations("shows"), True)
         else: tv_add_all_to_library(trakt.get_recommendations("shows"))
 
@@ -1045,7 +1101,12 @@ def tv_add_all_to_library(items, noscan = False):
     library_folder = setup_library(plugin.get_setting(SETTING_TV_LIBRARY_FOLDER, unicode))
     ids = ""
     import_tvdb()
-    if "results" in items: ids = '\n'.join([str(show["id"]) for show, item in execute(tmdb_to_tvdb, items["results"], workers=10)])
+    if "results" in items:
+        preids = []
+        for tvdb_show, tmdb_show in execute(tmdb_to_tvdb, items["results"], workers=10):
+            if tvdb_show is not None:
+                preids.append(tvdb_show["id"])
+        ids = '\n'.join(preids)
     else: ids = '\n'.join([str(i["show"]["ids"]["tvdb"]) if i["show"]["ids"]["tvdb"] != None and i["show"]["ids"]["tvdb"] != "" else i["show"]["ids"]["imdb"] for i in items])
     shows_batch_add_file = plugin.get_setting(SETTING_TV_BATCH_ADD_FILE_PATH, unicode)
     if xbmcvfs.exists(shows_batch_add_file):
@@ -1067,7 +1128,12 @@ def tv_add_to_library_parsed(id, player):
     import_tvdb()
     if id.startswith("tt"):
         try: id = tvdb.search_by_imdb(id)
-        except: return dialogs.ok(_("%s not found") % _("TV show"), "{0} {1} in TheTVDb".format(_("no show information found for"), id))
+        except:
+            if int(xbmc.getInfoLabel('System.BuildVersion')[:2]) > 17:
+               header = _("{0:s} not found").format(_("TV show"))
+            else:
+                header = _("%s not found") % _("TV show")
+            return dialogs.ok(header, "{0} {1} in TheTVDb".format(_("no show information found for"), id))
     library_folder = setup_library(plugin.get_setting(SETTING_TV_LIBRARY_FOLDER, unicode))
     show = tvdb[int(id)]
     imdb = show['imdb_id']
@@ -1117,7 +1183,12 @@ def tv_batch_add_to_library():
             r = f.read()
             f.close()
             ids = r.split('\n')
-        except: return dialogs.notify(msg='TVShows Batch Add File', title=_("%s not found").replace("%s ",""), delay=3000, image=get_icon_path("tv"))
+        except:
+            if int(xbmc.getInfoLabel('System.BuildVersion')[:2]) > 17:
+                title = _("{0:s} not found").replace("{0:s} ","")
+            else:
+                title = _("%s not found").replace("%s ","")
+            return dialogs.notify(msg='TVShows Batch Add File', title=_("%s not found").replace("%s ",""), delay=3000, image=get_icon_path("tv"))
         library_folder = setup_library(plugin.get_setting(SETTING_TV_LIBRARY_FOLDER, unicode))
         import_tvdb()
         import xbmcgui
