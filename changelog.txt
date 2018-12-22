@@ -1,3 +1,6 @@
+v3.0.[COLOR cyan]1[/COLOR]
+- Rebranded and forked to deepthought
+
 v2.0.[COLOR ff0084ff]16[/COLOR]
 - Added player-manager (settings > custom > Edit movies/tvshows library player)
 - Updated settings by including new players

@@ -3,7 +3,7 @@
 import urllib
 import xbmc
 
-pluginid = "plugin.video.metalliq"
+pluginid = "plugin.video.deepthought"
 
 def main():
     path = xbmc.getInfoLabel('ListItem.Path')

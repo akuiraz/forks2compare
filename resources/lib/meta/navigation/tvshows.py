@@ -1059,7 +1059,7 @@ def tv_add_all_to_library(items, noscan = False):
     batch_add_file = xbmcvfs.File(shows_batch_add_file, 'w')
     batch_add_file.write(str(ids))
     batch_add_file.close()
-    xbmc.executebuiltin("RunPlugin(plugin://plugin.video.metalliq/tv/batch_add_to_library)")
+    xbmc.executebuiltin("RunPlugin(plugin://plugin.video.deepthought/tv/batch_add_to_library)")
 
 
 @plugin.route('/tv/add_to_library_parsed/<id>/<player>')
@@ -1145,7 +1145,7 @@ def tv_batch_add_to_library():
                     batch_add_tvshows_to_library(library_folder, show)
                 except: 
                     dialogs.notify(msg='failed to add', title='%s' % id, delay=3000, image=get_icon_path("tv"))
-                    xbmc.log("MetalliQ failed to add: {0}".format(id),xbmc.LOGNOTICE)
+                    xbmc.log("deepthought failed to add: {0}".format(id),xbmc.LOGNOTICE)
             ids_index += 1
         if xbmcvfs.exists(tv_batch_file): os.remove(xbmc.translatePath(tv_batch_file))
         dialogs.notify(msg='Starting library scan afterwards', title='Adding tvshow strm-files', delay=5000, image=get_icon_path("tv"))
@@ -1328,7 +1328,7 @@ def make_tvshow_item(info):
                 if show['poster_path'] != None and show['poster_path'] != "": info['poster'] = u'%s%s' % ("http://image.tmdb.org/t/p/w500", show['poster_path'])
                 if info['fanart'] == None or info['fanart'] == "":
                     if show['backdrop_path'] != None and show['backdrop_path'] != "": info['fanart'] = u'%s%s' % ("http://image.tmdb.org/t/p/original", show['backdrop_path'])
-    if info['poster'] == None or info['poster'] == "": info['poster'] = "https://raw.githubusercontent.com/OpenELEQ/Style/master/MetalliQ/default/unavailable.png"
+    if info['poster'] == None or info['poster'] == "": info['poster'] = "http://cellardoortv.com/style/themes/deepthought/unavailable.png"
     if info['fanart'] == None or info['fanart'] == "": info['fanart'] = get_background_path()
     if xbmc.getCondVisibility("system.hasaddon(script.qlickplay)"): context_menu = [(_("Scan item to library"),"RunPlugin({0})".format(plugin.url_for("tv_add_to_library", id=tvdb_id))), ("%s %s" % (_("TV"), _("Trailer").lower()),"RunScript(script.qlickplay,info=playtvtrailer,tvdb_id={0})".format(tvdb_id)), ("[COLOR ff0084ff]Q[/COLOR]lick[COLOR ff0084ff]P[/COLOR]lay", "RunScript(script.qlickplay,info=tvinfo,tvdb_id={0})".format(tvdb_id)), ("%s %s (%s)" % ("Recommended", _("TV shows"), "TMDb"),"ActivateWindow(10025,plugin://script.qlickplay/?info=similartvshows&tvdb_id={0})".format(tvdb_id))]
     elif xbmc.getCondVisibility("system.hasaddon(script.extendedinfo)"): context_menu = [(_("Scan item to library"),"RunPlugin({0})".format(plugin.url_for("tv_add_to_library", id=tvdb_id))), ("%s %s" % (_("TV"), _("Trailer").lower()),"RunScript(script.extendedinfo,info=playtvtrailer,tvdb_id={0})".format(tvdb_id)), (_("Extended TV show info"), "RunScript(script.extendedinfo,info=extendedtvinfo,tvdb_id={0})".format(tvdb_id)), ("%s %s (%s)" % ("Recommended", _("TV shows"), "TMDb"),"ActivateWindow(10025,plugin://script.extendedinfo/?info=similartvshows&tvdb_id={0})".format(tvdb_id))]

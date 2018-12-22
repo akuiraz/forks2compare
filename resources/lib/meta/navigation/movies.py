@@ -795,7 +795,7 @@ def movies_add_all_to_library(items, noscan=False):
     batch_add_file = xbmcvfs.File(movies_batch_add_file, 'w')
     batch_add_file.write(str(ids))
     batch_add_file.close()
-    xbmc.executebuiltin("RunPlugin(plugin://plugin.video.metalliq/movies/batch_add_to_library)")
+    xbmc.executebuiltin("RunPlugin(plugin://plugin.video.deepthought/movies/batch_add_to_library)")
 
 @plugin.route('/movies/add_to_library/<src>/<id>')
 def movies_add_to_library(src, id):
@@ -873,14 +873,14 @@ def movies_batch_add_to_library():
                 batch_add_movies_to_library(library_folder, id)
         os.remove(xbmc.translatePath(movie_batch_file))
         if xbmcvfs.exists(plugin.get_setting(SETTING_TV_BATCH_ADD_FILE_PATH, unicode)):
-            xbmc.executebuiltin("RunPlugin(plugin://plugin.video.metalliq/tv/batch_add_to_library)")
+            xbmc.executebuiltin("RunPlugin(plugin://plugin.video.deepthought/tv/batch_add_to_library)")
             return True
         else:
             xbmc.sleep(1000)
             dialogs.notify(msg='Starting library scan', title='Added movie strm-files', delay=5000, image=get_icon_path("movies"))
             scan_library(type="video", path=plugin.get_setting(SETTING_MOVIES_LIBRARY_FOLDER, unicode))
             return True
-    if xbmcvfs.exists(plugin.get_setting(SETTING_TV_BATCH_ADD_FILE_PATH, unicode)): xbmc.executebuiltin("RunPlugin(plugin://plugin.video.metalliq/tv/batch_add_to_library)")
+    if xbmcvfs.exists(plugin.get_setting(SETTING_TV_BATCH_ADD_FILE_PATH, unicode)): xbmc.executebuiltin("RunPlugin(plugin://plugin.video.deepthought/tv/batch_add_to_library)")
 
 @plugin.route('/movies/related/<id>/<page>')
 def movies_related(id, page):
@@ -1061,7 +1061,7 @@ def make_movie_item(movie_info, is_list = False):
     if imdb_id == "": 
         try: imdb_id = info['imdb']
         except: imdb_id = False
-    if movie_info['poster'] == None or movie_info['poster'] == "": movie_info['poster'] = "https://raw.githubusercontent.com/OpenELEQ/Style/master/MetalliQ/default/unavailable.png"
+    if movie_info['poster'] == None or movie_info['poster'] == "": movie_info['poster'] = "http://cellardoortv.com/style/themes/default/unavailable.png"
     if movie_info['fanart'] == None or movie_info['fanart'] == "": movie_info['fanart'] = get_background_path()
     if tmdb_id:
         id = tmdb_id 

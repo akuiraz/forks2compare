@@ -126,4 +126,4 @@ def get_person_artwork(item):
         person_images = tmdb.People(person_tmdb_id).images()['profiles']
         return 'https://image.tmdb.org/t/p/w640' + person_images[0]['file_path']
     except:
-        return 'https://raw.githubusercontent.com/OpenELEQ/Style/master/MetalliQ/default/unavailable_movieposter.png'
+        return 'http://cellardoortv.com/style/themes/deepthought/unavailable_movieposter.png'

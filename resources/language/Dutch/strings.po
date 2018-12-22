@@ -1,12 +1,12 @@
-# Addon Name: MetalliQ
-# Addon id: plugin.video.metalliq
-# Addon Provider: [COLOR ff0084ff]Q[/COLOR]
+# Addon Name: [COLOR limegreen]M[/COLOR]etalli[COLOR limegreen]Q[/COLOR] For[COLOR limegreen]Q[/COLOR]ed
+# Addon id: plugin.video.deepthought
+# Addon Provider: [COLOR ghostwhite][B]GhostBuilder[/B][/COLOR]
 msgid ""
 msgstr ""
-"Project-Id-Version: MetalliQ Addon for Kodi\n"
+"Project-Id-Version: MetalliQ ForQed Addon for Kodi\n"
 "POT-Creation-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "PO-Revision-Date: 2016-03-27 14:00+0100\n"
-"Last-Translator: [COLOR ff0084ff]Q[/COLOR]\n"
+"Last-Translator: [COLOR ghostwhite][B]GhostBuilder[/B][/COLOR]\n"
 "Language-Team: Dutch\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -200,8 +200,8 @@ msgid "Preferred movie player from context menu"
 msgstr "Voorkeurs speler vanuit context menu"
 
 msgctxt "#30113"
-msgid "Would you like to automatically set MetalliQ as a movie source?"
-msgstr "Wilt u COLOR ff0084ff]M[/COLOR]etalli[COLOR ff0084ff]Q[/COLOR] automatisch instellen als een film bron?"
+msgid "Would you like to automatically set [COLOR limegreen]M[/COLOR]etalli[COLOR limegreen]Q[/COLOR] For[COLOR limegreen]Q[/COLOR]ed as a movie source?"
+msgstr "Wilt u [COLOR limegreen]M[/COLOR]etalli[COLOR limegreen]Q[/COLOR] For[COLOR limegreen]Q[/COLOR]ed automatisch instellen als een film bron?"
 
 msgctxt "#30114"
 msgid "Movie trailer"
@@ -236,8 +236,8 @@ msgid "Preferred TV show player from context menu"
 msgstr "Voorkeurs TV serie speler vanuit context menu"
 
 msgctxt "#30213"
-msgid "Would you like to automatically set MetalliQ as a TV show source?"
-msgstr "Wilt u MetalliQ automatisch instellen als een TV serie bron?"
+msgid "Would you like to automatically set [COLOR limegreen]M[/COLOR]etalli[COLOR limegreen]Q[/COLOR] For[COLOR limegreen]Q[/COLOR]ed as a TV show source?"
+msgstr "Wilt u [COLOR limegreen]M[/COLOR]etalli[COLOR limegreen]Q[/COLOR] For[COLOR limegreen]Q[/COLOR]ed automatisch instellen als een TV serie bron?"
 
 msgctxt "#30214"
 msgid "TV trailer"
@@ -328,8 +328,8 @@ msgid "Number of simultaneous searches"
 msgstr "Aantal gelijktijdige zoekopdrachten"
 
 msgctxt "#30410"
-msgid "Attempt to hide dialogs while MetalliQ is searching"
-msgstr "Probeer dialoogvensters te verbergen terwijl MetalliQ aan het zoeken is"
+msgid "Attempt to hide dialogs while [COLOR limegreen]M[/COLOR]etalli[COLOR limegreen]Q[/COLOR] For[COLOR limegreen]Q[/COLOR]ed is searching"
+msgstr "Probeer dialoogvensters te verbergen terwijl [COLOR limegreen]M[/COLOR]etalli[COLOR limegreen]Q[/COLOR] For[COLOR limegreen]Q[/COLOR]ed aan het zoeken is"
 
 msgctxt "#30411"
 msgid "Hide progress dialogs"
@@ -412,8 +412,8 @@ msgid "Preferred live player from context menu"
 msgstr "Voorkeurs live speler vanuit context menu"
 
 msgctxt "#30513"
-msgid "Would you like to automatically set MetalliQ as a channel source?"
-msgstr "Wilt u MetalliQ automatisch instellen als een kanalen video bron?"
+msgid "Would you like to automatically set [COLOR limegreen]M[/COLOR]etalli[COLOR limegreen]Q[/COLOR] For[COLOR limegreen]Q[/COLOR]ed as a channel source?"
+msgstr "Wilt u [COLOR limegreen]M[/COLOR]etalli[COLOR limegreen]Q[/COLOR] For[COLOR limegreen]Q[/COLOR]ed automatisch instellen als een kanalen video bron?"
 
 msgctxt "#30601"
 msgid "Genres"
@@ -620,8 +620,8 @@ msgid "Preferred musicvideo player from context menu"
 msgstr "Voorkeurs muziekvideo speler vanuit contextmenu"
 
 msgctxt "#30713"
-msgid "Would you like to automatically set MetalliQ as a musicvideo source?"
-msgstr "Wilt u MetalliQ automatisch instellen als een muziekvideo bron?"
+msgid "Would you like to automatically set [COLOR limegreen]M[/COLOR]etalli[COLOR limegreen]Q[/COLOR] For[COLOR limegreen]Q[/COLOR]ed as a musicvideo source?"
+msgstr "Wilt u [COLOR limegreen]M[/COLOR]etalli[COLOR limegreen]Q[/COLOR] For[COLOR limegreen]Q[/COLOR]ed automatisch instellen als een muziekvideo bron?"
 
 msgctxt "#30714"
 msgid "Personal"
@@ -696,8 +696,8 @@ msgid "Preferred music player from context menu"
 msgstr "Voorkeurs muziek speler vanuit context menu"
 
 msgctxt "#30813"
-msgid "Would you like to automatically set MetalliQ as a music source?"
-msgstr "Wilt u MetalliQ automatisch instellen als een muziek video bron?"
+msgid "Would you like to automatically set [COLOR limegreen]M[/COLOR]etalli[COLOR limegreen]Q[/COLOR] For[COLOR limegreen]Q[/COLOR]ed as a music source?"
+msgstr "Wilt u [COLOR limegreen]M[/COLOR]etalli[COLOR limegreen]Q[/COLOR] For[COLOR limegreen]Q[/COLOR]ed automatisch instellen als een muziek video bron?"
 
 msgctxt "#30814"
 msgid "[COLOR ff0084ff]Q[/COLOR]lick[COLOR ff0084ff]P[/COLOR]lay"
@@ -776,8 +776,8 @@ msgid "Play by name only"
 msgstr "Afspelen op alleen naam"
 
 msgctxt "#30833"
-msgid "MetalliQ"
-msgstr "MetalliQ"
+msgid "[COLOR limegreen]M[/COLOR]etalli[COLOR limegreen]Q[/COLOR] For[COLOR limegreen]Q[/COLOR]ed"
+msgstr "[COLOR limegreen]M[/COLOR]etalli[COLOR limegreen]Q[/COLOR] For[COLOR limegreen]Q[/COLOR]ed"
 
 msgctxt "#30834"
 msgid "Add movies to library using preferred library player?"

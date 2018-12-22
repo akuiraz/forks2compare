@@ -100,10 +100,10 @@ def setup_library(library_folder):
         # create folder
         xbmcvfs.mkdir(library_folder)
         # auto configure folder
-        msg = _("Would you like to automatically set MetalliQ as a channel video source?")
+        msg = _("Would you like to automatically set [COLOR cyan]DeepThought[/COLOR] as a channel video source?")
         if dialogs.yesno("{0} {1}".format(_("Library"), "setup"), msg):
             source_thumbnail = get_icon_path("live")
-            source_name = "MetalliQ " + _("Channels")
+            source_name = "[COLOR cyan]DeepThought[/COLOR] " + _("Channels")
             source_content = "('{0}','','','',0,0,'<settings></settings>',0,0,NULL,NULL)".format(library_folder)
             add_source(source_name, library_folder, source_content, source_thumbnail)
     # return translated path
@@ -112,13 +112,13 @@ def setup_library(library_folder):
 def auto_live_setup(library_folder):
     if library_folder[-1] != "/":
         library_folder += "/"
-    if not xbmcvfs.exists(library_folder):
-        try:
-            xbmcvfs.mkdir(library_folder)
-            source_thumbnail = get_icon_path("live")
-            source_name = "MetalliQ " + _("Channels")
-            source_content = "('{0}','','','',0,0,'<settings></settings>',0,0,NULL,NULL)".format(library_folder)
-            add_source(source_name, library_folder, source_content, source_thumbnail)
-            return True
-        except:
-            False
+    # create folders
+    try:
+        if not xbmcvfs.exists(library_folder): xbmcvfs.mkdir(library_folder)
+        source_thumbnail = get_icon_path("live")
+        source_name = "[COLOR cyan]DeepThought[/COLOR] " + _("Channels")
+        source_content = "('{0}','','','',0,0,'<settings></settings>',0,0,NULL,NULL)".format(library_folder)
+        add_source(source_name, library_folder, source_content, source_thumbnail)
+        return True
+    except:
+        False
